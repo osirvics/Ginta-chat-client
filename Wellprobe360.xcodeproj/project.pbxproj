@@ -7,18 +7,54 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		880695CA2AB7A90B0017B03E /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 880695C92AB7A90B0017B03E /* Kingfisher */; };
+		880695D12AB7B2850017B03E /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880695D02AB7B2850017B03E /* LoginView.swift */; };
+		880695D42AB7B7190017B03E /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880695D32AB7B7190017B03E /* CustomTextField.swift */; };
+		880695D62AB7B76B0017B03E /* CustomSecuredField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880695D52AB7B76B0017B03E /* CustomSecuredField.swift */; };
+		880695DA2AB7C8BF0017B03E /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880695D92AB7C8BF0017B03E /* AuthViewModel.swift */; };
+		880695DC2AB7DA1C0017B03E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880695DB2AB7DA1C0017B03E /* User.swift */; };
 		88A14D892AB79148004B9BBC /* Wellprobe360App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A14D882AB79148004B9BBC /* Wellprobe360App.swift */; };
 		88A14D8B2AB79148004B9BBC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A14D8A2AB79148004B9BBC /* ContentView.swift */; };
 		88A14D8D2AB79149004B9BBC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88A14D8C2AB79149004B9BBC /* Assets.xcassets */; };
 		88A14D902AB79149004B9BBC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88A14D8F2AB79149004B9BBC /* Preview Assets.xcassets */; };
+		88A14D982AB793A0004B9BBC /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 88A14D972AB793A0004B9BBC /* Alamofire */; };
+		88D563292AB897BC00CEB4CA /* Valet in Frameworks */ = {isa = PBXBuildFile; productRef = 88D563282AB897BC00CEB4CA /* Valet */; };
+		88D5632B2AB8B1BA00CEB4CA /* constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D5632A2AB8B1BA00CEB4CA /* constant.swift */; };
+		88D5632E2AB8CCE000CEB4CA /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D5632D2AB8CCE000CEB4CA /* HTTPClient.swift */; };
+		88D563312AB8F38800CEB4CA /* UserItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D563302AB8F38800CEB4CA /* UserItem.swift */; };
+		88D563332AB911AF00CEB4CA /* UserListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D563322AB911AF00CEB4CA /* UserListView.swift */; };
+		88D563352AB911F000CEB4CA /* UserListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D563342AB911F000CEB4CA /* UserListViewModel.swift */; };
+		88D563372ABA39AC00CEB4CA /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D563362ABA39AC00CEB4CA /* ConversationView.swift */; };
+		88D563392ABA66EB00CEB4CA /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D563382ABA66EB00CEB4CA /* MessageView.swift */; };
+		88D5633B2ABA87EE00CEB4CA /* ChatBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D5633A2ABA87EE00CEB4CA /* ChatBubble.swift */; };
+		88D5633D2ABB8F9000CEB4CA /* MessageEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D5633C2ABB8F9000CEB4CA /* MessageEvent.swift */; };
+		88D563402ABB9A1200CEB4CA /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 88D5633F2ABB9A1200CEB4CA /* Starscream */; };
+		88D563422ABBA09E00CEB4CA /* WSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D563412ABBA09E00CEB4CA /* WSClient.swift */; };
+		88D563442ABBA64700CEB4CA /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D563432ABBA64700CEB4CA /* MessageViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		880695D02AB7B2850017B03E /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		880695D32AB7B7190017B03E /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		880695D52AB7B76B0017B03E /* CustomSecuredField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSecuredField.swift; sourceTree = "<group>"; };
+		880695D92AB7C8BF0017B03E /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		880695DB2AB7DA1C0017B03E /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		88A14D852AB79148004B9BBC /* Wellprobe360.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wellprobe360.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88A14D882AB79148004B9BBC /* Wellprobe360App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wellprobe360App.swift; sourceTree = "<group>"; };
 		88A14D8A2AB79148004B9BBC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		88A14D8C2AB79149004B9BBC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		88A14D8F2AB79149004B9BBC /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		88D5632A2AB8B1BA00CEB4CA /* constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = constant.swift; sourceTree = "<group>"; };
+		88D5632D2AB8CCE000CEB4CA /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		88D563302AB8F38800CEB4CA /* UserItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserItem.swift; sourceTree = "<group>"; };
+		88D563322AB911AF00CEB4CA /* UserListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListView.swift; sourceTree = "<group>"; };
+		88D563342AB911F000CEB4CA /* UserListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListViewModel.swift; sourceTree = "<group>"; };
+		88D563362ABA39AC00CEB4CA /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
+		88D563382ABA66EB00CEB4CA /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		88D5633A2ABA87EE00CEB4CA /* ChatBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubble.swift; sourceTree = "<group>"; };
+		88D5633C2ABB8F9000CEB4CA /* MessageEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEvent.swift; sourceTree = "<group>"; };
+		88D563412ABBA09E00CEB4CA /* WSClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSClient.swift; sourceTree = "<group>"; };
+		88D563432ABBA64700CEB4CA /* MessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,12 +62,71 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88D563292AB897BC00CEB4CA /* Valet in Frameworks */,
+				880695CA2AB7A90B0017B03E /* Kingfisher in Frameworks */,
+				88A14D982AB793A0004B9BBC /* Alamofire in Frameworks */,
+				88D563402ABB9A1200CEB4CA /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		880695CB2AB7AFD40017B03E /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				880695D02AB7B2850017B03E /* LoginView.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		880695CC2AB7B12D0017B03E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				88D5632F2AB8F15500CEB4CA /* User */,
+				880695CB2AB7AFD40017B03E /* Authentication */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		880695CD2AB7B13F0017B03E /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				880695D92AB7C8BF0017B03E /* AuthViewModel.swift */,
+				88D563342AB911F000CEB4CA /* UserListViewModel.swift */,
+				88D563432ABBA64700CEB4CA /* MessageViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		880695CE2AB7B1510017B03E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				880695DB2AB7DA1C0017B03E /* User.swift */,
+				88D5633C2ABB8F9000CEB4CA /* MessageEvent.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		880695CF2AB7B15F0017B03E /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				880695D22AB7B69D0017B03E /* Views */,
+				88D5632A2AB8B1BA00CEB4CA /* constant.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		880695D22AB7B69D0017B03E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				880695D32AB7B7190017B03E /* CustomTextField.swift */,
+				880695D52AB7B76B0017B03E /* CustomSecuredField.swift */,
+				88D5633A2ABA87EE00CEB4CA /* ChatBubble.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		88A14D7C2AB79148004B9BBC = {
 			isa = PBXGroup;
 			children = (
@@ -51,6 +146,11 @@
 		88A14D872AB79148004B9BBC /* Wellprobe360 */ = {
 			isa = PBXGroup;
 			children = (
+				88D5632C2AB8CC5400CEB4CA /* Services */,
+				880695CF2AB7B15F0017B03E /* Utils */,
+				880695CE2AB7B1510017B03E /* Model */,
+				880695CD2AB7B13F0017B03E /* ViewModel */,
+				880695CC2AB7B12D0017B03E /* View */,
 				88A14D882AB79148004B9BBC /* Wellprobe360App.swift */,
 				88A14D8A2AB79148004B9BBC /* ContentView.swift */,
 				88A14D8C2AB79149004B9BBC /* Assets.xcassets */,
@@ -65,6 +165,26 @@
 				88A14D8F2AB79149004B9BBC /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		88D5632C2AB8CC5400CEB4CA /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				88D5632D2AB8CCE000CEB4CA /* HTTPClient.swift */,
+				88D563412ABBA09E00CEB4CA /* WSClient.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		88D5632F2AB8F15500CEB4CA /* User */ = {
+			isa = PBXGroup;
+			children = (
+				88D563302AB8F38800CEB4CA /* UserItem.swift */,
+				88D563322AB911AF00CEB4CA /* UserListView.swift */,
+				88D563362ABA39AC00CEB4CA /* ConversationView.swift */,
+				88D563382ABA66EB00CEB4CA /* MessageView.swift */,
+			);
+			path = User;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +203,12 @@
 			dependencies = (
 			);
 			name = Wellprobe360;
+			packageProductDependencies = (
+				88A14D972AB793A0004B9BBC /* Alamofire */,
+				880695C92AB7A90B0017B03E /* Kingfisher */,
+				88D563282AB897BC00CEB4CA /* Valet */,
+				88D5633F2ABB9A1200CEB4CA /* Starscream */,
+			);
 			productName = Wellprobe360;
 			productReference = 88A14D852AB79148004B9BBC /* Wellprobe360.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +237,12 @@
 				Base,
 			);
 			mainGroup = 88A14D7C2AB79148004B9BBC;
+			packageReferences = (
+				88A14D962AB793A0004B9BBC /* XCRemoteSwiftPackageReference "Alamofire" */,
+				880695C82AB7A90B0017B03E /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				88D563272AB897BC00CEB4CA /* XCRemoteSwiftPackageReference "Valet" */,
+				88D5633E2ABB9A1200CEB4CA /* XCRemoteSwiftPackageReference "Starscream" */,
+			);
 			productRefGroup = 88A14D862AB79148004B9BBC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -137,8 +269,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				880695D42AB7B7190017B03E /* CustomTextField.swift in Sources */,
+				88D5633B2ABA87EE00CEB4CA /* ChatBubble.swift in Sources */,
+				880695D12AB7B2850017B03E /* LoginView.swift in Sources */,
+				880695DA2AB7C8BF0017B03E /* AuthViewModel.swift in Sources */,
+				88D5633D2ABB8F9000CEB4CA /* MessageEvent.swift in Sources */,
+				88D5632B2AB8B1BA00CEB4CA /* constant.swift in Sources */,
+				88D563372ABA39AC00CEB4CA /* ConversationView.swift in Sources */,
+				88D563422ABBA09E00CEB4CA /* WSClient.swift in Sources */,
 				88A14D8B2AB79148004B9BBC /* ContentView.swift in Sources */,
+				88D563312AB8F38800CEB4CA /* UserItem.swift in Sources */,
+				88D563442ABBA64700CEB4CA /* MessageViewModel.swift in Sources */,
+				88D5632E2AB8CCE000CEB4CA /* HTTPClient.swift in Sources */,
+				88D563332AB911AF00CEB4CA /* UserListView.swift in Sources */,
+				880695D62AB7B76B0017B03E /* CustomSecuredField.swift in Sources */,
 				88A14D892AB79148004B9BBC /* Wellprobe360App.swift in Sources */,
+				880695DC2AB7DA1C0017B03E /* User.swift in Sources */,
+				88D563392ABA66EB00CEB4CA /* MessageView.swift in Sources */,
+				88D563352AB911F000CEB4CA /* UserListViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,6 +492,64 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		880695C82AB7A90B0017B03E /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.9.1;
+			};
+		};
+		88A14D962AB793A0004B9BBC /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.8.0;
+			};
+		};
+		88D563272AB897BC00CEB4CA /* XCRemoteSwiftPackageReference "Valet" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Square/Valet";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.2.0;
+			};
+		};
+		88D5633E2ABB9A1200CEB4CA /* XCRemoteSwiftPackageReference "Starscream" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/daltoniam/Starscream.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		880695C92AB7A90B0017B03E /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 880695C82AB7A90B0017B03E /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		88A14D972AB793A0004B9BBC /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 88A14D962AB793A0004B9BBC /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		88D563282AB897BC00CEB4CA /* Valet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 88D563272AB897BC00CEB4CA /* XCRemoteSwiftPackageReference "Valet" */;
+			productName = Valet;
+		};
+		88D5633F2ABB9A1200CEB4CA /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 88D5633E2ABB9A1200CEB4CA /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 88A14D7D2AB79148004B9BBC /* Project object */;
 }

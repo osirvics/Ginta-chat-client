@@ -8,17 +8,48 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @EnvironmentObject var viewModel: AuthViewModel
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        
+        
+        
+        Group{
+            
+            let accessToken = KeychainHelper.getToken()
+            if accessToken == nil {
+                LoginView()
+            }
+          
+            
+            TabView {
+                UserListView()
+                    .tabItem {
+                        Image(systemName: "house")
+                        Text("Home")
+                    }
+            
+                ConversationView()
+                    .tabItem {
+                        Image(systemName: "envelope")
+                        Text("Conversations")
+                    }
+                
+                Text("Notifications")
+                    .tabItem {
+                        Image(systemName: "bell")
+                        Text("Notifications")
+                    }
+            }
         }
-        .padding()
+    
+        
+        
+        
     }
 }
 
-#Preview {
-    ContentView()
-}
+//#Preview {
+//    ContentView().environmentObject(AuthViewModel.shared)
+//}
