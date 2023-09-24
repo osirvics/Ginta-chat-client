@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct UserListView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
     @ObservedObject var viewModel = UserListViewModel()
-    
     
     var body: some View {
         NavigationStack{
@@ -18,7 +18,7 @@ struct UserListView: View {
                     LazyVStack {
                         ForEach(viewModel.users) { user in
                             NavigationLink(
-                                destination: Text(user.firstName + " " + user.lastName),
+                                destination: MessageView(loggedInUser: authViewModel.loggedInUser!, recipient: user),
                                 label: {
                                     UserItem(user: user)
                                 }).buttonStyle(PlainButtonStyle())

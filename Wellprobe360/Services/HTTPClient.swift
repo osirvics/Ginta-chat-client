@@ -9,8 +9,8 @@ import Alamofire
 
 class HTTPClient {
     
-    private let profileUrl = "http://192.168.1.26:8000/v1/user/get-profile-bare"
-    private let userUrl = "http://192.168.1.26:8000/v1/user/all-users"
+    private let profileUrl = "\(BASE_URL.url)/v1/user/get-profile-bare"
+    private let userUrl = "\(BASE_URL.url)/v1/user/all-users"
     
     private var headers: HTTPHeaders {
         if let storedToken = KeychainHelper.getToken() {
@@ -41,5 +41,29 @@ class HTTPClient {
             }
         }
     }
+    
+    func getAllConversations(completion: @escaping (Result<ConversationResponse, Error>) -> Void) {
+        AF.request("\(BASE_URL.url)/v1/messaging/all-direct-conversations", headers: headers).responseDecodable(of: ConversationResponse.self) { response in
+            switch response.result {
+            case .success(let conversationResponse):
+                completion(.success(conversationResponse))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func getAllMessages(participantUUID: String, completion: @escaping (Result<MessageResponse, Error>) -> Void) {
+        AF.request("\(BASE_URL.url)/v1/messaging/direct-messages-all/\(participantUUID)", headers: headers).responseDecodable(of: MessageResponse.self) { response in
+            switch response.result {
+            case .success(let messageResponse):
+                completion(.success(messageResponse))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    
 }
 

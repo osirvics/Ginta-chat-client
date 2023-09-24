@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ConversationView: View {
     @State var shouldShowLogout = false
     @EnvironmentObject var viewModel: AuthViewModel
+    @ObservedObject var conversationViewModel = ConversationViewModel()
+    
     
     private var customNavBar: some View{
         HStack(spacing: 16) {
@@ -18,7 +21,7 @@ struct ConversationView: View {
                 .foregroundColor(Color(.systemGray))
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(viewModel.loggedInUser?.email ?? "")
+                Text("\(viewModel.loggedInUser?.firstName ?? "") \(viewModel.loggedInUser?.lastName ?? "")")
                     .font(.system(size: 20, weight: .bold))
                 Circle()
                     .frame(width: 12, height: 12)
@@ -41,7 +44,7 @@ struct ConversationView: View {
                 
                 ActionSheet(title: Text("Are you sure you want to logout?"), buttons: [
                     .destructive(Text("Logout"), action: {
-                        print("Logout user")
+                        KeychainHelper.removeToken()
                     }),
                     .cancel()
                 ])
@@ -53,24 +56,31 @@ struct ConversationView: View {
     private var conversationsScrollView: some View{
         ScrollView{
             
-            ForEach(0..<20, id:  \.self) { num in
+            ForEach(conversationViewModel.directConversations) { directConversation in
                 VStack {
                     
                     NavigationLink(
-                        destination: MessageView(),
+                        destination: Text("Message view") /*MessageView(loggedInUser: <#User?#>, recipient: <#User?#>)*/,
                         label: {
                             HStack(spacing: 16){
-                                Image(systemName: "person.fill")
-                                    .font(.system(size: 32))
-                                    .padding(8)
-                                    .overlay(RoundedRectangle(cornerRadius: 44)
-                                        .stroke(Color(.systemGray), lineWidth: 1)
-                                    )
+                                KFImage(URL(string: directConversation.participantProfilePicture ?? ""))
+                                    .placeholder({
+                                            Image(systemName: "person.fill")
+                                                .font(.system(size: 32))
+                                                .padding(8)
+                                                .overlay(RoundedRectangle(cornerRadius: 44)
+                                                    .stroke(Color(.systemGray), lineWidth: 1)
+                                        )
+                                    })
+                                    .resizable()
+                                    .frame(width: 56, height: 56)
+                                    .clipShape(Circle())
+                                  
 
                                 VStack(alignment: .leading){
-                                    Text("Udeme Etuk")
+                                    Text("\(directConversation.participantFirstname ) \(directConversation.participantLastname )")
                                         .font(.system(size: 16, weight: .semibold))
-                                    Text("Message Sent to user")
+                                    Text(directConversation.lastMessage)
                                         .font(.system(size: 16))
                                         .foregroundColor(Color(.gray))
                                 }

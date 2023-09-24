@@ -13,6 +13,8 @@
 		880695D62AB7B76B0017B03E /* CustomSecuredField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880695D52AB7B76B0017B03E /* CustomSecuredField.swift */; };
 		880695DA2AB7C8BF0017B03E /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880695D92AB7C8BF0017B03E /* AuthViewModel.swift */; };
 		880695DC2AB7DA1C0017B03E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880695DB2AB7DA1C0017B03E /* User.swift */; };
+		88381BD42AC0AAFA000AF85C /* ConversationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88381BD32AC0AAFA000AF85C /* ConversationViewModel.swift */; };
+		88381BD62AC0BC62000AF85C /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88381BD52AC0BC62000AF85C /* Conversation.swift */; };
 		88A14D892AB79148004B9BBC /* Wellprobe360App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A14D882AB79148004B9BBC /* Wellprobe360App.swift */; };
 		88A14D8B2AB79148004B9BBC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A14D8A2AB79148004B9BBC /* ContentView.swift */; };
 		88A14D8D2AB79149004B9BBC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88A14D8C2AB79149004B9BBC /* Assets.xcassets */; };
@@ -39,6 +41,8 @@
 		880695D52AB7B76B0017B03E /* CustomSecuredField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSecuredField.swift; sourceTree = "<group>"; };
 		880695D92AB7C8BF0017B03E /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		880695DB2AB7DA1C0017B03E /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		88381BD32AC0AAFA000AF85C /* ConversationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewModel.swift; sourceTree = "<group>"; };
+		88381BD52AC0BC62000AF85C /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		88A14D852AB79148004B9BBC /* Wellprobe360.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wellprobe360.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88A14D882AB79148004B9BBC /* Wellprobe360App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wellprobe360App.swift; sourceTree = "<group>"; };
 		88A14D8A2AB79148004B9BBC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -95,6 +99,7 @@
 				880695D92AB7C8BF0017B03E /* AuthViewModel.swift */,
 				88D563342AB911F000CEB4CA /* UserListViewModel.swift */,
 				88D563432ABBA64700CEB4CA /* MessageViewModel.swift */,
+				88381BD32AC0AAFA000AF85C /* ConversationViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -104,6 +109,7 @@
 			children = (
 				880695DB2AB7DA1C0017B03E /* User.swift */,
 				88D5633C2ABB8F9000CEB4CA /* MessageEvent.swift */,
+				88381BD52AC0BC62000AF85C /* Conversation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -277,6 +283,7 @@
 				88D5632B2AB8B1BA00CEB4CA /* constant.swift in Sources */,
 				88D563372ABA39AC00CEB4CA /* ConversationView.swift in Sources */,
 				88D563422ABBA09E00CEB4CA /* WSClient.swift in Sources */,
+				88381BD62AC0BC62000AF85C /* Conversation.swift in Sources */,
 				88A14D8B2AB79148004B9BBC /* ContentView.swift in Sources */,
 				88D563312AB8F38800CEB4CA /* UserItem.swift in Sources */,
 				88D563442ABBA64700CEB4CA /* MessageViewModel.swift in Sources */,
@@ -286,6 +293,7 @@
 				88A14D892AB79148004B9BBC /* Wellprobe360App.swift in Sources */,
 				880695DC2AB7DA1C0017B03E /* User.swift in Sources */,
 				88D563392ABA66EB00CEB4CA /* MessageView.swift in Sources */,
+				88381BD42AC0AAFA000AF85C /* ConversationViewModel.swift in Sources */,
 				88D563352AB911F000CEB4CA /* UserListViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -423,11 +431,11 @@
 				DEVELOPMENT_TEAM = 8ZGFBRW9R6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Wellprobe360/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -452,11 +460,11 @@
 				DEVELOPMENT_TEAM = 8ZGFBRW9R6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Wellprobe360/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

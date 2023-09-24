@@ -10,13 +10,18 @@
 //
 //   let welcome = try? JSONDecoder().decode(Welcome.self, from: jsonData)
 
+
+import Foundation
 import SwiftUI
 
-
-// MARK: - Welcome
-struct MessageEvent: Codable {
+// MARK: - MessageEvent
+struct MessageEvent: Codable, Identifiable {
     let eventType: MessageEventType
     let payload: Payload
+    
+    var id: String {
+        return payload.clientUUID// Use uuid of payload or a new UUID if it's nil
+    }
 
     enum CodingKeys: String, CodingKey {
         case eventType = "event_type"
@@ -25,33 +30,67 @@ struct MessageEvent: Codable {
 }
 
 
-// MARK: - Payload
-struct Payload: Codable {
-    let senderUUID, recipientUUID, content: String
-    let status: MessageStatus
-    let messageTag: MessageTag
-    let requestUUID: String
-    let attachments: [Attachment]
+struct MessageResponse: Codable {
+    let directMessages: [Payload]
 
     enum CodingKeys: String, CodingKey {
+        case directMessages = "direct_messages"
+    }
+}
+
+// MARK: - Payload
+struct Payload: Codable, Identifiable {
+    let uuid: String?
+    let directConversationUUID: String?
+    let senderUUID: String
+    let recipientUUID: String
+    let content: String
+    let clientUUID: String
+    let status: MessageStatus
+    let messageTag: MessageTag
+    let requestUUID: String?
+    let attachments: [Attachment]
+    let timestamp: Int64?
+    let createdAt: String?
+    let updatedAt: String?
+    
+    var id: String {
+        return clientUUID // Use uuid or a new UUID if it's nil
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case uuid
         case senderUUID = "sender_uuid"
         case recipientUUID = "recipient_uuid"
         case content, status
+        case clientUUID = "client_uuid"
         case messageTag = "message_tag"
         case requestUUID = "request_uuid"
+        case directConversationUUID = "direct_conversation_uuid"
         case attachments
+        case timestamp
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
     }
 }
 
 // MARK: - Attachment
 struct Attachment: Codable {
+    let attachmentUUID: String?
     let fileURL: String
     let fileSize: Int
-    let fileType, filename, messageUUID: String
-    let messageType: MessageType
-    let groupMessageUUID, directConversationUUID, groupConversationUUID: String
-
+    let fileType: String
+    let filename: String
+    let messageType: String
+    let messageUUID: String
+    let groupMessageUUID: String?
+    let directConversationUUID: String?
+    let groupConversationUUID: String?
+    let createdAt: String?
+    let updatedAt: String?
+    
     enum CodingKeys: String, CodingKey {
+        case attachmentUUID = "attachment_uuid"
         case fileURL = "file_url"
         case fileSize = "file_size"
         case fileType = "file_type"
@@ -61,8 +100,14 @@ struct Attachment: Codable {
         case groupMessageUUID = "group_message_uuid"
         case directConversationUUID = "direct_conversation_uuid"
         case groupConversationUUID = "group_conversation_uuid"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
     }
 }
+
+
+// Enums...
+
 
 enum MessageType: String, Codable {
     case direct = "Direct"

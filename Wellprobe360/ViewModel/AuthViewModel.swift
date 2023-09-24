@@ -25,8 +25,9 @@ class AuthViewModel: ObservableObject {
     
     private init() {
         self.errorMessage = nil
-        getUsers()
         getProfile()
+        getUsers()
+      
     }
     
     func authenticate(username: String, password: String) {
@@ -37,7 +38,7 @@ class AuthViewModel: ObservableObject {
         print("Debug: username: \(username)")
         print("Debug: password: \(password)")
         
-        let url = "http://192.168.1.26:8000/v1/user/auth/token"
+        let url = "\(BASE_URL.url)/v1/user/auth/token"
         let parameters: [String: Any] = [
             "username": username,
             "password": password

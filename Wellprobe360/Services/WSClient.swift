@@ -19,7 +19,7 @@ class WSClient: WebSocketDelegate {
     }
 
     func connect(token: String) {
-        let request = URLRequest(url: URL(string: "ws://localhost:8000/ws?token=\(token)")!)
+        let request = URLRequest(url: URL(string: "ws://192.168.1.26:8000/ws?token=\(token)")!)
         socket = WebSocket(request: request)
         socket?.delegate = self
         socket?.connect()

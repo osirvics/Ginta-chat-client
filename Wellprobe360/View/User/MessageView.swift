@@ -10,11 +10,16 @@ import SwiftUI
 struct MessageView: View {
     
     @StateObject var viewModel = MessageViewModel()
-    @State var chatText = ""
+    @State var messageText = ""
+    let loggedInUser : User
+    let recipient : User
     
+    init(loggedInUser: User, recipient: User) {
+        self.loggedInUser = loggedInUser
+        self.recipient = recipient
+    }
 
     var body: some View {
-        
         
         NavigationStack {
             VStack {
@@ -28,46 +33,88 @@ struct MessageView: View {
             Divider()
             //            .background(Color(.systemGroupedBackground))
                 .background(Color(.init(white: 0.95, alpha: 1)))
-                .navigationTitle("Messages")
+                .navigationTitle(recipient.email )
                 .navigationBarTitleDisplayMode(.inline)
         }
     }
     
     private var messageListView: some View{
         ScrollView{
-            ForEach(0..<20) { num in
+            ForEach(viewModel.messages) { message in
                 //change this
-                var b = false
-                if b {
+                let isCurrentUser = message.senderUUID == loggedInUser.uuid
+                if isCurrentUser {
                     HStack{
                         Spacer()
-                        HStack {
+                        ZStack(alignment: .bottomTrailing) {
+                           
+                            HStack {
+                                
+                                Text(message.content)
+                                    .foregroundColor(.white)
+                            }
+                            .padding()
+                            .padding(.bottom, 8)
+                            .background(Color(.systemBlue))
+                            .clipShape(ChatBubble(isCurrentUser:  isCurrentUser))
+                           
                             
-                            Text("Message is what we see \(num)")
-                                .padding(.vertical, 8)
+                            HStack(spacing: 4) {
+                                Text("16:36")
+                                    .font(.caption)
+                                    .foregroundColor(.white)
+                                Image(systemName: imageName(for: message.status))
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 12, height: 12)
+                                    .clipShape(Circle())
+                                 
                                 .foregroundColor(.white)
+                            }
+                            .padding(.trailing, 8)
+                            .padding(.bottom, 8)
                         }
-                        .padding()
-                        .background(Color(.systemBlue))
-                        .clipShape(ChatBubble(isCurrentUser:  b))
                     }
                     .padding(.horizontal)
                     .padding(.top, 8)
                 }
                 else{
                     HStack{
-                        HStack {
-                            Text("Message is what we see \(num)")
-                                .padding(.vertical, 8)
-                                .foregroundColor(.primary)
+                        ZStack(alignment: .bottomTrailing) {
+                            HStack {
+                                Text(message.content)
+                                    .padding(.vertical, 8)
+                                    .foregroundColor(.primary)
+                            }
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .clipShape(ChatBubble(isCurrentUser:  isCurrentUser))
+                            
+                        Text("16:36")
+                            .font(.caption)
+                            .foregroundColor(.primary)
+                            .padding(.trailing, 8)
+                            .padding(.bottom, 8)
+                        
                         }
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .clipShape(ChatBubble(isCurrentUser:  b))
                         Spacer()
                     }
                     .padding(.horizontal)
                     .padding(.top, 8)
+                    
+//                    ForEach(message.attachments, id: \.fileURL) { attachment in
+//                                // render the attachment based on its type.
+//                                if attachment.fileType == "image/jpeg" {
+//                                    // Assuming you have a way to load the image from the fileURL
+//                                    Image(/* Load Image from attachment.fileURL */)
+//                                        .resizable()
+//                                        .aspectRatio(contentMode: .fit)
+//                                        .cornerRadius(8)
+//                                } else {
+//                                    // Handle other attachment types.
+//                                    Text("Attachment: \(attachment.filename)")
+//                                }
+//                            }
                 }
                 
             }
@@ -88,13 +135,17 @@ struct MessageView: View {
                     .frame(width: 25, height: 25)
             })
             
-            TextField("Message...", text: $chatText)
+            TextField("Message...", text: $messageText)
                 .padding(12)
                 .background(Color(.systemGray4))
-                .multilineTextAlignment(/*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             Button(action: {
-                viewModel.send(messageEvent: sendMessage())
+                let messageEvent = sendMessage(senderUUID: loggedInUser.uuid, recipientUUID: recipient.uuid)
+                viewModel.send(messageEvent: messageEvent)
+                    // Append the sent message to the messages array in ViewModel
+                viewModel.messages.append(messageEvent.payload)
+                    // Reset the messageText to an empty string
+                messageText = ""
             }, label: {
                 Image(systemName: "paperplane.fill")
                     .font(.system(size: 14))
@@ -106,33 +157,42 @@ struct MessageView: View {
         }.padding(.horizontal)
     }
     
-    func sendMessage() -> MessageEvent {
+    func sendMessage(senderUUID: String, recipientUUID: String) -> MessageEvent {
         let attachment = Attachment(
-            fileURL: "wellprobe360/wellprobe360-profile-image-upload-folder/ac41039d-add0-43ca-bb2b-88cfc7fea9f4.jpeg",
-            fileSize: 1024,
-            fileType: "image/jpeg",
-            filename: "sample.jpg",
-            messageUUID: "b67ce13e-79ff-4a34-d5a1-3f05e5f679cd",
-            messageType: .direct,
-            groupMessageUUID: "null",
-            directConversationUUID: "c87df14f-8a00-5b45-e6b2-4g06f6g7a0de",
-            groupConversationUUID: "null"
-        )
-        
-        let payload = Payload(
-            senderUUID: "e9e2faf4-31ee-495c-96b8-c2fd7b731aff",
-            recipientUUID: "e09c58b3-f1b5-4f50-9d0d-18eae402a950",
-            content: "Hello, how are you today?  just checking out for you",
-            status: .sent,
-            messageTag: .general,
-            requestUUID: "a57bd12d-68ee-4935-c590-2f04d4f578ab",
-            attachments: [attachment]
-        )
+              attachmentUUID: nil, // Set to nil
+              fileURL: "wellprobe360/wellprobe360-profile-image-upload-folder/ac41039d-add0-43ca-bb2b-88cfc7fea9f4.jpeg",
+              fileSize: 1024,
+              fileType: "image/jpeg",
+              filename: "sample.jpg",
+              messageType: "Direct",
+              messageUUID: UUID().uuidString, // Generate a new UUID for the message
+              groupMessageUUID: nil, // Set to nil
+              directConversationUUID: nil, // Set to nil
+              groupConversationUUID: nil, // Set to nil
+              createdAt: nil, // Set to nil
+              updatedAt: nil // Set to nil
+          )
+          
+          let payload = Payload(
+              uuid: nil, // Set to nil
+              directConversationUUID: nil, // Set to nil
+              senderUUID: senderUUID, // Use the passed senderUUID
+              recipientUUID: recipientUUID, // Use the passed recipientUUID
+              content: messageText, // Use the passed content
+              clientUUID: UUID().uuidString, // Generate a new UUID for the client
+              status: .sent,
+              messageTag: .general,
+              requestUUID: nil, // Set to nil
+              attachments: [attachment],
+              timestamp: nil, // Set to nil
+              createdAt: nil, // Set to nil
+              updatedAt: nil // Set to nil
+          )
         
         let messageEvent = MessageEvent(eventType: .directMessage, payload: payload)
         return messageEvent
-    
     }
+
     
     
     func connectToWebSocket() {
@@ -144,11 +204,25 @@ struct MessageView: View {
         }
     }
     
+    private func imageName(for status: MessageStatus) -> String {
+        switch status {
+        case .sent:
+            return "clock"
+        case .received:
+            print("Checkmarl returned")
+            return "checkmark"
+        case .delivered:
+            return "checkmark.circle.fill"
+        default:
+            return "clock" // Default case, you can adjust this as needed
+        }
+    }
+    
 }
-
-#Preview {
-    MessageView()
-//    .preferredColorScheme(.dark)
-
-}
+//
+//#Preview {
+//    MessageView(loggedInUser: nil, recipient: nil)
+////    .preferredColorScheme(.dark)
+//
+//}
 

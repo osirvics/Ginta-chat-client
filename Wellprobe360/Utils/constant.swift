@@ -31,4 +31,16 @@ class KeychainHelper {
         }
     }
     
+    static func removeToken() {
+            do {
+                try valet.removeObject(forKey: accessTokenKey)
+            } catch {
+                print("Failed to remove access_token.")
+            }
+        }
+    
+}
+
+class BASE_URL {
+    static let url = "http://192.168.1.26:8000"
 }

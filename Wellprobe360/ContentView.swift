@@ -20,33 +20,31 @@ struct ContentView: View {
             let accessToken = KeychainHelper.getToken()
             if accessToken == nil {
                 LoginView()
+             
             }
-          
-            
-            TabView {
-                UserListView()
-                    .tabItem {
-                        Image(systemName: "house")
-                        Text("Home")
-                    }
-            
-                ConversationView()
-                    .tabItem {
-                        Image(systemName: "envelope")
-                        Text("Conversations")
-                    }
+            else{
+                TabView {
+                    UserListView()
+                        .tabItem {
+                            Image(systemName: "house")
+                            Text("Home")
+                        }
                 
-                Text("Notifications")
-                    .tabItem {
-                        Image(systemName: "bell")
-                        Text("Notifications")
-                    }
+                    ConversationView()
+                        .tabItem {
+                            Image(systemName: "envelope")
+                            Text("Conversations")
+                        }
+                    
+                    Text("Notifications")
+                        .tabItem {
+                            Image(systemName: "bell")
+                            Text("Notifications")
+                        }
+                }
             }
         }
-    
-        
-        
-        
+ 
     }
 }
 
