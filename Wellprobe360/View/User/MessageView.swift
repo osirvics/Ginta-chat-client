@@ -9,15 +9,26 @@ import SwiftUI
 
 struct MessageView: View {
     
-    @StateObject var viewModel = MessageViewModel()
+//    @StateObject var viewModel = MessageViewModel()
+    @StateObject var viewModel: MessageViewModel
     @State var messageText = ""
     let loggedInUser : User
-    let recipient : User
+    let recipient : String
     
-    init(loggedInUser: User, recipient: User) {
+    init(loggedInUser: User, recipient: String) {
         self.loggedInUser = loggedInUser
         self.recipient = recipient
+        self._viewModel = StateObject(wrappedValue: MessageViewModel(recipientUUID: recipient))
     }
+    
+    
+//    @StateObject var viewModel: MessageViewModel
+//      //... other properties
+//      
+//      init(loggedInUser: User, recipient: User) {
+//          self._viewModel = StateObject(wrappedValue: MessageViewModel(recipientUUID: recipient.uuid))
+//          //... other initializations
+//      }
 
     var body: some View {
         
@@ -29,11 +40,11 @@ struct MessageView: View {
                 
                 chatInputView
             }
-            .onAppear(perform: connectToWebSocket)
+//            .onAppear(perform: connectToWebSocket)
             Divider()
             //            .background(Color(.systemGroupedBackground))
                 .background(Color(.init(white: 0.95, alpha: 1)))
-                .navigationTitle(recipient.email )
+                .navigationTitle(recipient)
                 .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -140,7 +151,7 @@ struct MessageView: View {
                 .background(Color(.systemGray4))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             Button(action: {
-                let messageEvent = sendMessage(senderUUID: loggedInUser.uuid, recipientUUID: recipient.uuid)
+                let messageEvent = sendMessage(senderUUID: loggedInUser.uuid, recipientUUID: recipient)
                 viewModel.send(messageEvent: messageEvent)
                     // Append the sent message to the messages array in ViewModel
                 viewModel.messages.append(messageEvent.payload)
@@ -195,14 +206,14 @@ struct MessageView: View {
 
     
     
-    func connectToWebSocket() {
-        if let accessToken = KeychainHelper.getToken() {
-            viewModel.connect(token: accessToken)
-        } else {
-            // Handle error, e.g., show an alert or redirect the user to a login screen
-            print("Error: Failed to retrieve access token from keychain.")
-        }
-    }
+//    func connectToWebSocket() {
+//        if let accessToken = KeychainHelper.getToken() {
+//            viewModel.connect(token: accessToken)
+//        } else {
+//            // Handle error, e.g., show an alert or redirect the user to a login screen
+//            print("Error: Failed to retrieve access token from keychain.")
+//        }
+//    }
     
     private func imageName(for status: MessageStatus) -> String {
         switch status {

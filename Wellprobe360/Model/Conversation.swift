@@ -25,7 +25,8 @@ struct DirectConversation: Codable, Identifiable {
     
     
     let directConversationUUID, participant1UUID, participant2UUID, lastMessage: String
-    let lastMessageAt, createdAt, updatedAt, participantFirstname: String
+    let lastMessageAt, createdAt,  participantFirstname: String
+    let updatedAt : String?
     let participantLastname: String
     let participantProfilePicture: String?
 

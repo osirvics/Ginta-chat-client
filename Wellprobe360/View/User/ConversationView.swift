@@ -9,6 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct ConversationView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
     @State var shouldShowLogout = false
     @EnvironmentObject var viewModel: AuthViewModel
     @ObservedObject var conversationViewModel = ConversationViewModel()
@@ -60,7 +61,8 @@ struct ConversationView: View {
                 VStack {
                     
                     NavigationLink(
-                        destination: Text("Message view") /*MessageView(loggedInUser: <#User?#>, recipient: <#User?#>)*/,
+                        destination: MessageView(loggedInUser: authViewModel.loggedInUser!,
+                                                 recipient: directConversation.participant1UUID == authViewModel.loggedInUser?.uuid ? directConversation.participant2UUID : directConversation.participant1UUID),
                         label: {
                             HStack(spacing: 16){
                                 KFImage(URL(string: directConversation.participantProfilePicture ?? ""))

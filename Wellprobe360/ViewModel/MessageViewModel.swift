@@ -7,35 +7,50 @@
 
 import Foundation
 import SwiftUI
+import Combine
+
+
 
 class MessageViewModel: ObservableObject{
-    private let webSocketClient = WSClient()
-    private let httpClient = HTTPClient()
-    
-    
     @Published var messages = [Payload]()
-    
+    var recipientUUID: String
+    private let httpClient = HTTPClient()
+    private var cancellables: Set<AnyCancellable> = []
+    @EnvironmentObject var authViewModel: AuthViewModel
+         
+         
+       
+    init(recipientUUID: String) {
+           self.recipientUUID = recipientUUID
+           self.messages = GlobalWebSocketManager.shared.messagesDictionary[recipientUUID] ?? []
+           subscribeToIncomingMessages()
+       }
 
+//       private func subscribeToIncomingMessages() {
+//           for message in GlobalWebSocketManager.shared.incomingMessages where message.payload.recipientUUID == recipientUUID {
+//               handleMessageEvent(message)
+//           }
+//       }
     
-    
-    
-    init() {
-        webSocketClient.onMessageReceived = { [weak self] messageEvent in
-            DispatchQueue.main.async {
-                self?.handleMessageEvent(messageEvent)
-            }
-        }
+    private func subscribeToIncomingMessages() {
         
-        
-    }
+           GlobalWebSocketManager.shared.incomingMessages
+               .sink { [weak self] messageEvent in
+                   if messageEvent.payload.recipientUUID == self?.recipientUUID || messageEvent.payload.senderUUID == self?.recipientUUID  {
+                       self?.handleMessageEvent(messageEvent)
+                   }
+               }
+               .store(in: &cancellables)
+       }
     
-    func connect(token: String) {
-        webSocketClient.connect(token: token)
-    }
     
     func send(messageEvent: MessageEvent) {
-        webSocketClient.send(event: messageEvent)
-    }
+          // Construct the MessageEvent object
+//          let messageEvent = //... Your logic to create MessageEvent
+          GlobalWebSocketManager.shared.send(event: messageEvent)
+          // Optimistically append the message
+//          messages.append(messageEvent.payload)
+      }
     
     private func handleMessageEvent(_ messageEvent: MessageEvent) {
         print("Message event received in Viewmodel")
@@ -74,3 +89,19 @@ class MessageViewModel: ObservableObject{
     }
     
 }
+
+//    func connect(token: String) {
+//        webSocketClient.connect(token: token)
+//    }
+//
+//    func send(messageEvent: MessageEvent) {
+//        webSocketClient.send(event: messageEvent)
+//    }
+    
+//    func sendMessage(content: String) {
+//          // Construct the MessageEvent object
+//          let messageEvent = //... Your logic to create MessageEvent
+//          GlobalWebSocketManager.shared.send(event: messageEvent)
+//          // Optimistically append the message
+//          messages.append(messageEvent.payload)
+//      }

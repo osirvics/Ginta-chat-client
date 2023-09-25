@@ -15,6 +15,7 @@
 		880695DC2AB7DA1C0017B03E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880695DB2AB7DA1C0017B03E /* User.swift */; };
 		88381BD42AC0AAFA000AF85C /* ConversationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88381BD32AC0AAFA000AF85C /* ConversationViewModel.swift */; };
 		88381BD62AC0BC62000AF85C /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88381BD52AC0BC62000AF85C /* Conversation.swift */; };
+		88381BD82AC0EAD6000AF85C /* GlobalWebSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88381BD72AC0EAD6000AF85C /* GlobalWebSocketManager.swift */; };
 		88A14D892AB79148004B9BBC /* Wellprobe360App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A14D882AB79148004B9BBC /* Wellprobe360App.swift */; };
 		88A14D8B2AB79148004B9BBC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A14D8A2AB79148004B9BBC /* ContentView.swift */; };
 		88A14D8D2AB79149004B9BBC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88A14D8C2AB79149004B9BBC /* Assets.xcassets */; };
@@ -43,6 +44,7 @@
 		880695DB2AB7DA1C0017B03E /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		88381BD32AC0AAFA000AF85C /* ConversationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewModel.swift; sourceTree = "<group>"; };
 		88381BD52AC0BC62000AF85C /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		88381BD72AC0EAD6000AF85C /* GlobalWebSocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalWebSocketManager.swift; sourceTree = "<group>"; };
 		88A14D852AB79148004B9BBC /* Wellprobe360.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wellprobe360.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88A14D882AB79148004B9BBC /* Wellprobe360App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wellprobe360App.swift; sourceTree = "<group>"; };
 		88A14D8A2AB79148004B9BBC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 			children = (
 				88D5632D2AB8CCE000CEB4CA /* HTTPClient.swift */,
 				88D563412ABBA09E00CEB4CA /* WSClient.swift */,
+				88381BD72AC0EAD6000AF85C /* GlobalWebSocketManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -286,6 +289,7 @@
 				88381BD62AC0BC62000AF85C /* Conversation.swift in Sources */,
 				88A14D8B2AB79148004B9BBC /* ContentView.swift in Sources */,
 				88D563312AB8F38800CEB4CA /* UserItem.swift in Sources */,
+				88381BD82AC0EAD6000AF85C /* GlobalWebSocketManager.swift in Sources */,
 				88D563442ABBA64700CEB4CA /* MessageViewModel.swift in Sources */,
 				88D5632E2AB8CCE000CEB4CA /* HTTPClient.swift in Sources */,
 				88D563332AB911AF00CEB4CA /* UserListView.swift in Sources */,
