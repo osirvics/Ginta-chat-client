@@ -18,7 +18,7 @@ struct MessageView: View {
     init(loggedInUser: User, recipient: String) {
         self.loggedInUser = loggedInUser
         self.recipient = recipient
-        self._viewModel = StateObject(wrappedValue: MessageViewModel(recipientUUID: recipient))
+        self._viewModel = StateObject(wrappedValue: MessageViewModel(recipientUUID: recipient, senderUUID: loggedInUser.uuid))
     }
     
     

@@ -45,14 +45,36 @@ class GlobalWebSocketManager: ObservableObject {
            webSocketClient.onMessageReceived = { [weak self] messageEvent in
                DispatchQueue.main.async {
                    // Store the message in messagesDictionary
-                   let recipientUUID = messageEvent.payload.recipientUUID
-                   var messages = self?.messagesDictionary[recipientUUID] ?? []
-                   messages.append(messageEvent.payload)
-                   self?.messagesDictionary[recipientUUID] = messages
-                   self?.incomingMessages.send(messageEvent)
+//                   let recipientUUID = messageEvent.payload.recipientUUID
+//                   var messages = self?.messagesDictionary[recipientUUID] ?? []
+//                   messages.append(messageEvent.payload)
+//                   self?.messagesDictionary[recipientUUID] = messages
+//                   self?.incomingMessages.send(messageEvent)
+                   
+                   // Create a unique conversationID from senderUUID and recipientUUID
+                      let senderUUID = messageEvent.payload.senderUUID
+                      let recipientUUID = messageEvent.payload.recipientUUID
+                      let conversationID = self?.getConversationID(senderUUID: senderUUID, recipientUUID: recipientUUID) ?? ""
+                      print("Conversation ID in Golbal: \(conversationID)")
+                        
+                      
+                      // Store the message in messagesDictionary
+                      var messages = self?.messagesDictionary[conversationID] ?? []
+                      messages.append(messageEvent.payload)
+                      self?.messagesDictionary[conversationID] = messages
+                      
+                      self?.incomingMessages.send(messageEvent)
+                   
+                  
                }
            }
        }
+    
+    func getConversationID(senderUUID: String, recipientUUID: String) -> String {
+        let ids = [senderUUID, recipientUUID].sorted() // sort the UUIDs
+        return ids.joined(separator: "_") // join the sorted UUIDs with an underscore
+    }
+
     
     func connect(token: String) {
         webSocketClient.connect(token: token)

@@ -14,15 +14,22 @@ import Combine
 class MessageViewModel: ObservableObject{
     @Published var messages = [Payload]()
     var recipientUUID: String
+    var senderUUID: String
     private let httpClient = HTTPClient()
     private var cancellables: Set<AnyCancellable> = []
     @EnvironmentObject var authViewModel: AuthViewModel
          
          
        
-    init(recipientUUID: String) {
+    init(recipientUUID: String, senderUUID: String) {
            self.recipientUUID = recipientUUID
-           self.messages = GlobalWebSocketManager.shared.messagesDictionary[recipientUUID] ?? []
+           self.senderUUID = senderUUID
+              
+           let conversationID = GlobalWebSocketManager.shared.getConversationID(
+            senderUUID: senderUUID, recipientUUID: recipientUUID)
+           self.messages = GlobalWebSocketManager.shared.messagesDictionary[conversationID] ?? []
+             print("Conversation ID in ViewModel: \(conversationID)")
+           
            subscribeToIncomingMessages()
        }
 
