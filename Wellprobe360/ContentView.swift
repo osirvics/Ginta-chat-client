@@ -15,6 +15,7 @@ struct ContentView: View {
         
         
         
+        
         Group{
             
             let accessToken = KeychainHelper.getToken()
@@ -23,7 +24,9 @@ struct ContentView: View {
              
             }
             else{
+            
                 TabView {
+                
                     UserListView()
                         .tabItem {
                             Image(systemName: "house")
@@ -41,11 +44,19 @@ struct ContentView: View {
                             Image(systemName: "bell")
                             Text("Notifications")
                         }
-                }
+                }.onAppear(perform: connectToWebSocket)
+                
             }
         }
  
     }
+    
+    private func connectToWebSocket() {
+        if let token = KeychainHelper.getToken() {
+            GlobalWebSocketManager.shared.connect(token: token)
+        }
+    }
+    
 }
 
 //#Preview {

@@ -9,15 +9,26 @@ import SwiftUI
 
 struct MessageView: View {
     
-    @StateObject var viewModel = MessageViewModel()
+//    @StateObject var viewModel = MessageViewModel()
+    @StateObject var viewModel: MessageViewModel
     @State var messageText = ""
     let loggedInUser : User
-    let recipient : User
+    let recipient : String
     
-    init(loggedInUser: User, recipient: User) {
+    init(loggedInUser: User, recipient: String) {
         self.loggedInUser = loggedInUser
         self.recipient = recipient
+        self._viewModel = StateObject(wrappedValue: MessageViewModel(recipientUUID: recipient, senderUUID: loggedInUser.uuid))
     }
+    
+    
+//    @StateObject var viewModel: MessageViewModel
+//      //... other properties
+//      
+//      init(loggedInUser: User, recipient: User) {
+//          self._viewModel = StateObject(wrappedValue: MessageViewModel(recipientUUID: recipient.uuid))
+//          //... other initializations
+//      }
 
     var body: some View {
         
@@ -29,11 +40,11 @@ struct MessageView: View {
                 
                 chatInputView
             }
-            .onAppear(perform: connectToWebSocket)
+//            .onAppear(perform: connectToWebSocket)
             Divider()
             //            .background(Color(.systemGroupedBackground))
                 .background(Color(.init(white: 0.95, alpha: 1)))
-                .navigationTitle(recipient.email )
+                .navigationTitle(recipient)
                 .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -140,11 +151,17 @@ struct MessageView: View {
                 .background(Color(.systemGray4))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             Button(action: {
-                let messageEvent = sendMessage(senderUUID: loggedInUser.uuid, recipientUUID: recipient.uuid)
+                let messageEvent = sendMessage(senderUUID: loggedInUser.uuid, recipientUUID: recipient)
                 viewModel.send(messageEvent: messageEvent)
-                    // Append the sent message to the messages array in ViewModel
-                viewModel.messages.append(messageEvent.payload)
-                    // Reset the messageText to an empty string
+//                    if case let .message(message) = messageEvent.payload {
+//                        // Append the sent message to the messages array in ViewModel
+//                        viewModel.messages.append(message)
+//                    }
+                
+//                viewModel.send(messageEvent: messageEvent)
+//                    // Append the sent message to the messages array in ViewModel
+//                viewModel.messages.append(messageEvent.payload)
+//                    // Reset the messageText to an empty string
                 messageText = ""
             }, label: {
                 Image(systemName: "paperplane.fill")
@@ -165,7 +182,7 @@ struct MessageView: View {
               fileType: "image/jpeg",
               filename: "sample.jpg",
               messageType: "Direct",
-              messageUUID: UUID().uuidString, // Generate a new UUID for the message
+              messageUUID: nil, // Generate a new UUID for the message
               groupMessageUUID: nil, // Set to nil
               directConversationUUID: nil, // Set to nil
               groupConversationUUID: nil, // Set to nil
@@ -173,36 +190,41 @@ struct MessageView: View {
               updatedAt: nil // Set to nil
           )
           
-          let payload = Payload(
-              uuid: nil, // Set to nil
-              directConversationUUID: nil, // Set to nil
-              senderUUID: senderUUID, // Use the passed senderUUID
-              recipientUUID: recipientUUID, // Use the passed recipientUUID
-              content: messageText, // Use the passed content
-              clientUUID: UUID().uuidString, // Generate a new UUID for the client
-              status: .sent,
-              messageTag: .general,
-              requestUUID: nil, // Set to nil
-              attachments: [attachment],
-              timestamp: nil, // Set to nil
-              createdAt: nil, // Set to nil
-              updatedAt: nil // Set to nil
-          )
+//          let payload = Message(
+//            
+//          )
+        let payload = Payload.message(Message(
+            uuid: nil, // Set to nil
+            directConversationUUID: nil, // Set to nil
+            senderUUID: senderUUID, // Use the passed senderUUID
+            recipientUUID: recipientUUID, // Use the passed recipientUUID
+            content: messageText, // Use the passed content
+            clientUUID: UUID().uuidString, // Generate a new UUID for the client
+            status: .sent,
+            messageTag: .general,
+            requestUUID: nil, // Set to nil
+            attachments: [attachment],
+            timestamp: nil, // Set to nil
+            createdAt: nil, // Set to nil
+            updatedAt: nil // Set to nil
+           //... existing parameters remain the same
+        ))
         
         let messageEvent = MessageEvent(eventType: .directMessage, payload: payload)
         return messageEvent
+        
     }
 
     
     
-    func connectToWebSocket() {
-        if let accessToken = KeychainHelper.getToken() {
-            viewModel.connect(token: accessToken)
-        } else {
-            // Handle error, e.g., show an alert or redirect the user to a login screen
-            print("Error: Failed to retrieve access token from keychain.")
-        }
-    }
+//    func connectToWebSocket() {
+//        if let accessToken = KeychainHelper.getToken() {
+//            viewModel.connect(token: accessToken)
+//        } else {
+//            // Handle error, e.g., show an alert or redirect the user to a login screen
+//            print("Error: Failed to retrieve access token from keychain.")
+//        }
+//    }
     
     private func imageName(for status: MessageStatus) -> String {
         switch status {

@@ -42,5 +42,5 @@ class KeychainHelper {
 }
 
 class BASE_URL {
-    static let url = "http://192.168.1.26:8000"
+    static let url = "http://192.168.1.22:8000"
 }

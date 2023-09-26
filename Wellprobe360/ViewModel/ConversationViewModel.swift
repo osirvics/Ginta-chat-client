@@ -10,7 +10,7 @@ import SwiftUI
 
 class ConversationViewModel: ObservableObject {
     let httpClient = HTTPClient()
-    @Published var directConversations = [DirectConversation]()
+    @Published var directConversations = [Conversation]()
     
     init() {
         getConversations()

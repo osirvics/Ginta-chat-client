@@ -13,6 +13,7 @@ struct Wellprobe360App: App {
         WindowGroup {
             ContentView()
                 .environmentObject(AuthViewModel.shared)
+                .environmentObject(GlobalWebSocketManager.shared)
         }
     }
 }

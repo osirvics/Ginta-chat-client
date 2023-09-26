@@ -18,7 +18,7 @@ struct UserListView: View {
                     LazyVStack {
                         ForEach(viewModel.users) { user in
                             NavigationLink(
-                                destination: MessageView(loggedInUser: authViewModel.loggedInUser!, recipient: user),
+                                destination: MessageView(loggedInUser: authViewModel.loggedInUser!, recipient: user.uuid),
                                 label: {
                                     UserItem(user: user)
                                 }).buttonStyle(PlainButtonStyle())
