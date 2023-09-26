@@ -26,7 +26,6 @@ class WSClient: WebSocketDelegate {
     }
 
     func send(event: MessageEvent) {
-//        print("Sending event: \(event)")
         do {
               let data = try JSONEncoder().encode(event)
               if let jsonString = String(data: data, encoding: .utf8) {
@@ -53,6 +52,9 @@ class WSClient: WebSocketDelegate {
         case .text(let string):
             do {
                 if let data = string.data(using: .utf8) {
+                    let jsonString = String(data: data, encoding: .utf8) ?? ""
+                    print("Received JSON string: \(jsonString)") //
+                    
                     let messageEvent = try JSONDecoder().decode(MessageEvent.self, from: data)
                     onMessageReceived?(messageEvent)
                 }

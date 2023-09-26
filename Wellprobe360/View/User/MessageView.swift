@@ -176,7 +176,7 @@ struct MessageView: View {
               fileType: "image/jpeg",
               filename: "sample.jpg",
               messageType: "Direct",
-              messageUUID: UUID().uuidString, // Generate a new UUID for the message
+              messageUUID: nil, // Generate a new UUID for the message
               groupMessageUUID: nil, // Set to nil
               directConversationUUID: nil, // Set to nil
               groupConversationUUID: nil, // Set to nil
@@ -184,7 +184,7 @@ struct MessageView: View {
               updatedAt: nil // Set to nil
           )
           
-          let payload = Payload(
+          let payload = Message(
               uuid: nil, // Set to nil
               directConversationUUID: nil, // Set to nil
               senderUUID: senderUUID, // Use the passed senderUUID

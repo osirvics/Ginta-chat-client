@@ -14,7 +14,7 @@ class GlobalWebSocketManager: ObservableObject {
 //    @Published var incomingMessages: [MessageEvent] = []
     private(set) var incomingMessages = PassthroughSubject<MessageEvent, Never>()
     
-    @Published var messagesDictionary: [String: [Payload]] = [:]
+    @Published var messagesDictionary: [String: [Message]] = [:]
     private var webSocketClient = WSClient()
     
     
@@ -50,19 +50,17 @@ class GlobalWebSocketManager: ObservableObject {
 //                   messages.append(messageEvent.payload)
 //                   self?.messagesDictionary[recipientUUID] = messages
 //                   self?.incomingMessages.send(messageEvent)
+                  
+                   
                    
                    // Create a unique conversationID from senderUUID and recipientUUID
                       let senderUUID = messageEvent.payload.senderUUID
                       let recipientUUID = messageEvent.payload.recipientUUID
                       let conversationID = self?.getConversationID(senderUUID: senderUUID, recipientUUID: recipientUUID) ?? ""
-                      print("Conversation ID in Golbal: \(conversationID)")
-                        
-                      
                       // Store the message in messagesDictionary
                       var messages = self?.messagesDictionary[conversationID] ?? []
                       messages.append(messageEvent.payload)
                       self?.messagesDictionary[conversationID] = messages
-                      
                       self?.incomingMessages.send(messageEvent)
                    
                   

@@ -15,13 +15,10 @@ import Foundation
 import SwiftUI
 
 // MARK: - MessageEvent
-struct MessageEvent: Codable, Identifiable {
+struct MessageEvent: Codable {
     let eventType: MessageEventType
-    let payload: Payload
+    let payload: Message
     
-    var id: String {
-        return payload.clientUUID// Use uuid of payload or a new UUID if it's nil
-    }
 
     enum CodingKeys: String, CodingKey {
         case eventType = "event_type"
@@ -31,7 +28,7 @@ struct MessageEvent: Codable, Identifiable {
 
 
 struct MessageResponse: Codable {
-    let directMessages: [Payload]
+    let directMessages: [Message]
 
     enum CodingKeys: String, CodingKey {
         case directMessages = "direct_messages"
@@ -39,7 +36,7 @@ struct MessageResponse: Codable {
 }
 
 // MARK: - Payload
-struct Payload: Codable, Identifiable {
+struct Message: Codable, Identifiable {
     let uuid: String?
     let directConversationUUID: String?
     let senderUUID: String
@@ -82,7 +79,7 @@ struct Attachment: Codable {
     let fileType: String
     let filename: String
     let messageType: String
-    let messageUUID: String
+    let messageUUID: String?
     let groupMessageUUID: String?
     let directConversationUUID: String?
     let groupConversationUUID: String?
@@ -135,5 +132,8 @@ enum MessageEventType: String, Codable {
     case directMessageRead = "direct_message_read"
     case groupMessage = "group_message"
     case groupMessageReceived = "group_message_received"
+    case conversationUpdated = "conversation_updated"
+
+   
 }
 

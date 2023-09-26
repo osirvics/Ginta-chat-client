@@ -12,7 +12,7 @@ import Combine
 
 
 class MessageViewModel: ObservableObject{
-    @Published var messages = [Payload]()
+    @Published var messages = [Message]()
     var recipientUUID: String
     var senderUUID: String
     private let httpClient = HTTPClient()
@@ -26,9 +26,9 @@ class MessageViewModel: ObservableObject{
            self.senderUUID = senderUUID
               
            let conversationID = GlobalWebSocketManager.shared.getConversationID(
-            senderUUID: senderUUID, recipientUUID: recipientUUID)
+           senderUUID: senderUUID, recipientUUID: recipientUUID)
+           
            self.messages = GlobalWebSocketManager.shared.messagesDictionary[conversationID] ?? []
-             print("Conversation ID in ViewModel: \(conversationID)")
            
            subscribeToIncomingMessages()
        }
@@ -43,9 +43,9 @@ class MessageViewModel: ObservableObject{
         
            GlobalWebSocketManager.shared.incomingMessages
                .sink { [weak self] messageEvent in
-                   if messageEvent.payload.recipientUUID == self?.recipientUUID || messageEvent.payload.senderUUID == self?.recipientUUID  {
+                   /*if messageEvent.payload.recipientUUID == self?.recipientUUID || messageEvent.payload.senderUUID == self?.recipientUUID*/  /*{*/
                        self?.handleMessageEvent(messageEvent)
-                   }
+//                   }
                }
                .store(in: &cancellables)
        }
@@ -66,7 +66,6 @@ class MessageViewModel: ObservableObject{
         case .directMessage:
             // Handle direct message
             print("Received a direct message!")
-            print("Message: \(messageEvent)")
             messages.append(messageEvent.payload)
         case .directMessageReceived:
             
