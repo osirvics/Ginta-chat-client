@@ -51,16 +51,45 @@ class WSClient: WebSocketDelegate {
             print("Disconnected with reason: \(reason) and code: \(code)")
         case .text(let string):
             do {
-                if let data = string.data(using: .utf8) {
-                    let jsonString = String(data: data, encoding: .utf8) ?? ""
-                    print("Received JSON string: \(jsonString)") //
-                    
-                    let messageEvent = try JSONDecoder().decode(MessageEvent.self, from: data)
-                    onMessageReceived?(messageEvent)
+                    if let data = string.data(using: .utf8) {
+                        let jsonString = String(data: data, encoding: .utf8) ?? ""
+                        print("DEBUG: Received JSON string: \(jsonString)") //
+                        
+                        let messageEvent = try JSONDecoder().decode(MessageEvent.self, from: data)
+//                        print("Received message payload: \(messageEvent)")
+                        
+                        switch messageEvent.payload {
+                                       case .message(let message):
+                                           print("DEBUG: Received message payload: \(message)")
+                                       case .directConversation(let directConversation):
+                                           print("DEBUG: Received DirectConversation payload")
+                                    }
+                        
+
+                        
+//                        switch messageEvent.eventType  {
+//                        case .message(let message):
+//                            print("Received message payload: \(message)")
+//                        case .conversationUpdated(let conversation):
+//                            print("Received conversation payload: \(conversation)")
+//                        }
+                        
+                        onMessageReceived?(messageEvent)
+                    }
+                } catch {
+                    print("Decoding error: \(error)")
                 }
-            } catch {
-                print("Decoding error: \(error)")
-            }
+//            do {
+//                if let data = string.data(using: .utf8) {
+//                    let jsonString = String(data: data, encoding: .utf8) ?? ""
+//                    print("Received JSON string: \(jsonString)") //
+//                    
+//                    let messageEvent = try JSONDecoder().decode(MessageEvent.self, from: data)
+//                    onMessageReceived?(messageEvent)
+//                }
+//            } catch {
+//                print("Decoding error: \(error)")
+//            }
         case .binary(let data):
             if let messageEvent = try? JSONDecoder().decode(MessageEvent.self, from: data) {
                 onMessageReceived?(messageEvent)

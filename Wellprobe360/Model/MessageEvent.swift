@@ -14,12 +14,22 @@
 import Foundation
 import SwiftUI
 
-// MARK: - MessageEvent
+//// MARK: - MessageEvent
+//struct MessageEvent: Codable {
+//    let eventType: MessageEventType
+//    let payload: Message
+//    
+//
+//    enum CodingKeys: String, CodingKey {
+//        case eventType = "event_type"
+//        case payload
+//    }
+//}
+
 struct MessageEvent: Codable {
     let eventType: MessageEventType
-    let payload: Message
+    let payload: Payload
     
-
     enum CodingKeys: String, CodingKey {
         case eventType = "event_type"
         case payload
@@ -136,4 +146,34 @@ enum MessageEventType: String, Codable {
 
    
 }
+
+
+enum Payload: Codable {
+    case message(Message)
+    case directConversation(DirectConversation)
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let message = try? container.decode(Message.self) {
+            self = .message(message)
+            return
+        }
+        if let directConversation = try? container.decode(DirectConversation.self) {
+            self = .directConversation(directConversation)
+            return
+        }
+        throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unable to decode payload")
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .message(let message):
+            try container.encode(message)
+        case .directConversation(let directConversation):
+            try container.encode(directConversation)
+        }
+    }
+}
+
 

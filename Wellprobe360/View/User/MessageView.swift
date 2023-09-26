@@ -153,9 +153,15 @@ struct MessageView: View {
             Button(action: {
                 let messageEvent = sendMessage(senderUUID: loggedInUser.uuid, recipientUUID: recipient)
                 viewModel.send(messageEvent: messageEvent)
-                    // Append the sent message to the messages array in ViewModel
-                viewModel.messages.append(messageEvent.payload)
-                    // Reset the messageText to an empty string
+//                    if case let .message(message) = messageEvent.payload {
+//                        // Append the sent message to the messages array in ViewModel
+//                        viewModel.messages.append(message)
+//                    }
+                
+//                viewModel.send(messageEvent: messageEvent)
+//                    // Append the sent message to the messages array in ViewModel
+//                viewModel.messages.append(messageEvent.payload)
+//                    // Reset the messageText to an empty string
                 messageText = ""
             }, label: {
                 Image(systemName: "paperplane.fill")
@@ -184,24 +190,29 @@ struct MessageView: View {
               updatedAt: nil // Set to nil
           )
           
-          let payload = Message(
-              uuid: nil, // Set to nil
-              directConversationUUID: nil, // Set to nil
-              senderUUID: senderUUID, // Use the passed senderUUID
-              recipientUUID: recipientUUID, // Use the passed recipientUUID
-              content: messageText, // Use the passed content
-              clientUUID: UUID().uuidString, // Generate a new UUID for the client
-              status: .sent,
-              messageTag: .general,
-              requestUUID: nil, // Set to nil
-              attachments: [attachment],
-              timestamp: nil, // Set to nil
-              createdAt: nil, // Set to nil
-              updatedAt: nil // Set to nil
-          )
+//          let payload = Message(
+//            
+//          )
+        let payload = Payload.message(Message(
+            uuid: nil, // Set to nil
+            directConversationUUID: nil, // Set to nil
+            senderUUID: senderUUID, // Use the passed senderUUID
+            recipientUUID: recipientUUID, // Use the passed recipientUUID
+            content: messageText, // Use the passed content
+            clientUUID: UUID().uuidString, // Generate a new UUID for the client
+            status: .sent,
+            messageTag: .general,
+            requestUUID: nil, // Set to nil
+            attachments: [attachment],
+            timestamp: nil, // Set to nil
+            createdAt: nil, // Set to nil
+            updatedAt: nil // Set to nil
+           //... existing parameters remain the same
+        ))
         
         let messageEvent = MessageEvent(eventType: .directMessage, payload: payload)
         return messageEvent
+        
     }
 
     

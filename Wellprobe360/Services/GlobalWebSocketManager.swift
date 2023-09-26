@@ -42,28 +42,48 @@ class GlobalWebSocketManager: ObservableObject {
     
     
     private init() {
-           webSocketClient.onMessageReceived = { [weak self] messageEvent in
+//           webSocketClient.onMessageReceived = { [weak self] messageEvent in
+//               DispatchQueue.main.async {
+//                   // Store the message in messagesDictionary
+////                   let recipientUUID = messageEvent.payload.recipientUUID
+////                   var messages = self?.messagesDictionary[recipientUUID] ?? []
+////                   messages.append(messageEvent.payload)
+////                   self?.messagesDictionary[recipientUUID] = messages
+////                   self?.incomingMessages.send(messageEvent)
+//                  
+//                   
+//                   
+//                    Create a unique conversationID from senderUUID and recipientUUID
+//                      let senderUUID = messageEvent.payload.senderUUID
+//                      let recipientUUID = messageEvent.payload.recipientUUID
+//                      let conversationID = self?.getConversationID(senderUUID: senderUUID, recipientUUID: recipientUUID) ?? ""
+//                      // Store the message in messagesDictionary
+//                      var messages = self?.messagesDictionary[conversationID] ?? []
+//                      messages.append(messageEvent.payload)
+//                      self?.messagesDictionary[conversationID] = messages
+//                      self?.incomingMessages.send(messageEvent)
+//                   
+//                   
+//                   
+//                  
+//               }
+//           }
+        webSocketClient.onMessageReceived = { [weak self] messageEvent in
                DispatchQueue.main.async {
-                   // Store the message in messagesDictionary
-//                   let recipientUUID = messageEvent.payload.recipientUUID
-//                   var messages = self?.messagesDictionary[recipientUUID] ?? []
-//                   messages.append(messageEvent.payload)
-//                   self?.messagesDictionary[recipientUUID] = messages
-//                   self?.incomingMessages.send(messageEvent)
-                  
-                   
-                   
-                   // Create a unique conversationID from senderUUID and recipientUUID
-                      let senderUUID = messageEvent.payload.senderUUID
-                      let recipientUUID = messageEvent.payload.recipientUUID
-                      let conversationID = self?.getConversationID(senderUUID: senderUUID, recipientUUID: recipientUUID) ?? ""
-                      // Store the message in messagesDictionary
-                      var messages = self?.messagesDictionary[conversationID] ?? []
-                      messages.append(messageEvent.payload)
-                      self?.messagesDictionary[conversationID] = messages
-                      self?.incomingMessages.send(messageEvent)
-                   
-                  
+                   switch messageEvent.payload {
+                   case .message(let message):
+                       // Access properties of message here
+                       let senderUUID = message.senderUUID
+                       let recipientUUID = message.recipientUUID
+                       let conversationID = self?.getConversationID(senderUUID: senderUUID, recipientUUID: recipientUUID) ?? ""
+                       var messages = self?.messagesDictionary[conversationID] ?? []
+                       messages.append(message)
+                       self?.messagesDictionary[conversationID] = messages
+                   case .directConversation(let directConversation):
+                            print("DEBUG: DirectConversation received in GlobalWebSocketManager \(directConversation)")
+                       // Handle DirectConversation Payload as per your requirement
+                   }
+                   self?.incomingMessages.send(messageEvent)
                }
            }
        }
