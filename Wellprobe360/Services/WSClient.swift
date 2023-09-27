@@ -53,14 +53,14 @@ class WSClient: WebSocketDelegate {
             do {
                     if let data = string.data(using: .utf8) {
                         let jsonString = String(data: data, encoding: .utf8) ?? ""
-                        print("DEBUG: Received JSON string: \(jsonString)") //
+//                        print("DEBUG: Received JSON string: \(jsonString)") //
                         
                         let messageEvent = try JSONDecoder().decode(MessageEvent.self, from: data)
 //                        print("Received message payload: \(messageEvent)")
                         
                         switch messageEvent.payload {
                                        case .message(let message):
-                                           print("DEBUG: Received message payload: \(message)")
+                                           print("DEBUG: Received message payload")
                                        case .directConversation(let directConversation):
                                            print("DEBUG: Received DirectConversation payload")
                                     }
