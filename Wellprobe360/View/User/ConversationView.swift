@@ -83,7 +83,9 @@ struct ConversationView: View {
                                     Text("\(directConversation.participantFirstname ) \(directConversation.participantLastname )")
                                         .font(.system(size: 16, weight: .semibold))
                                     Text(directConversation.lastMessage)
-                                        .font(.system(size: 16))
+                                        .lineLimit(2)
+                                        .truncationMode(.tail)
+                                        .font(.system(.body)) // .body is an example, you can choose other text styles
                                         .foregroundColor(Color(.gray))
                                 }
                                 Spacer()

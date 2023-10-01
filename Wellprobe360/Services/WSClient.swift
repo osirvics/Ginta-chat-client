@@ -9,9 +9,12 @@ import Foundation
 import Starscream
 
 class WSClient: WebSocketDelegate {
-  
+    private var reconnectAttempts = 0
+    private var maxReconnectAttempts = 5 // or whatever limit you want to set
+    private var token: String?
+    var isConnected: Bool = false
     
-    private var socket: WebSocket?
+    var socket: WebSocket?
     var onMessageReceived: ((MessageEvent) -> Void)?
     
     init() {
@@ -19,7 +22,8 @@ class WSClient: WebSocketDelegate {
     }
 
     func connect(token: String) {
-        let request = URLRequest(url: URL(string: "ws://192.168.1.22:8000/ws?token=\(token)")!)
+        self.token = token
+        let request = URLRequest(url: URL(string: "wss://wells--wellprobe360--slmzgs44xxyz.code.run/ws?token=\(token)")!)
         socket = WebSocket(request: request)
         socket?.delegate = self
         socket?.connect()
@@ -47,8 +51,30 @@ class WSClient: WebSocketDelegate {
         switch event {
         case .connected(let headers):
             print("Connected with headers: \(headers)")
+            isConnected = true
+            reconnectAttempts = 0 // reset the reconnectAttempts counter upon successful connection
         case .disconnected(let reason, let code):
+            isConnected = false
             print("Disconnected with reason: \(reason) and code: \(code)")
+            if reconnectAttempts < maxReconnectAttempts {
+                            let delay = pow(2.0, Double(reconnectAttempts)) // Exponential backoff delay
+                            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                                if let token = self.token {
+                                    self.connect(token: token)
+                                    self.reconnectAttempts += 1
+                                }
+                            }
+                        }
+            
+//            if reconnectAttempts < maxReconnectAttempts {
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // 2 seconds delay
+//                                if let token = self.token {
+//                                    self.connect(token: token)
+//                                    self.reconnectAttempts += 1
+//                                }
+//                            }
+//                        }
+            
         case .text(let string):
             do {
                     if let data = string.data(using: .utf8) {
@@ -56,44 +82,35 @@ class WSClient: WebSocketDelegate {
 //                        print("DEBUG: Received JSON string: \(jsonString)") //
                         
                         let messageEvent = try JSONDecoder().decode(MessageEvent.self, from: data)
-//                        print("Received message payload: \(messageEvent)")
+                    
                         
                         switch messageEvent.payload {
                                        case .message(let message):
-                                           print("DEBUG: Received message payload")
+                                        break
+//                                           print("DEBUG: Received message payload")
                                        case .directConversation(let directConversation):
-                                           print("DEBUG: Received DirectConversation payload")
-                                    }
-                        
-
-                        
-//                        switch messageEvent.eventType  {
-//                        case .message(let message):
-//                            print("Received message payload: \(message)")
-//                        case .conversationUpdated(let conversation):
-//                            print("Received conversation payload: \(conversation)")
-//                        }
+//                                           print("DEBUG: Received DirectConversation payload")
+                                                break
+                        case .directMessageDelivery(_):
+                            break
+                                       
+                        case .directMessageRead(_):
+                            break
+                        case .directMessageReadList(_):
+                            break
+                        }
+                
                         
                         onMessageReceived?(messageEvent)
                     }
                 } catch {
                     print("Decoding error: \(error)")
                 }
-//            do {
-//                if let data = string.data(using: .utf8) {
-//                    let jsonString = String(data: data, encoding: .utf8) ?? ""
-//                    print("Received JSON string: \(jsonString)") //
-//                    
-//                    let messageEvent = try JSONDecoder().decode(MessageEvent.self, from: data)
-//                    onMessageReceived?(messageEvent)
-//                }
-//            } catch {
-//                print("Decoding error: \(error)")
-//            }
+
         case .binary(let data):
             if let messageEvent = try? JSONDecoder().decode(MessageEvent.self, from: data) {
                 onMessageReceived?(messageEvent)
-                print("Received data: \(messageEvent)")
+//                print("Received data: \(messageEvent)")
             
             }
         case .ping(_):

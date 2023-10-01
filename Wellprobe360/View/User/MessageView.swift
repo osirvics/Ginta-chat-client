@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MessageView: View {
     
-//    @StateObject var viewModel = MessageViewModel()
     @StateObject var viewModel: MessageViewModel
     @State var messageText = ""
     let loggedInUser : User
@@ -21,15 +20,6 @@ struct MessageView: View {
         self._viewModel = StateObject(wrappedValue: MessageViewModel(recipientUUID: recipient, senderUUID: loggedInUser.uuid))
     }
     
-    
-//    @StateObject var viewModel: MessageViewModel
-//      //... other properties
-//      
-//      init(loggedInUser: User, recipient: User) {
-//          self._viewModel = StateObject(wrappedValue: MessageViewModel(recipientUUID: recipient.uuid))
-//          //... other initializations
-//      }
-
     var body: some View {
         
         NavigationStack {
@@ -40,7 +30,6 @@ struct MessageView: View {
                 
                 chatInputView
             }
-//            .onAppear(perform: connectToWebSocket)
             Divider()
             //            .background(Color(.systemGroupedBackground))
                 .background(Color(.init(white: 0.95, alpha: 1)))
@@ -49,11 +38,87 @@ struct MessageView: View {
         }
     }
     
-    private var messageListView: some View{
-        ScrollView{
-            ForEach(viewModel.messages) { message in
-                //change this
-                let isCurrentUser = message.senderUUID == loggedInUser.uuid
+//    private var messageListView: some View{
+//        
+//        ScrollViewReader  { proxy in
+//            
+//            ScrollView{
+//                ForEach(viewModel.messages) { message in
+//                    //change this
+//                    let isCurrentUser = message.senderUUID == loggedInUser.uuid
+//                    if isCurrentUser {
+//                        HStack{
+//                            Spacer()
+//                          
+//                        }
+//                        .padding(.horizontal)
+//                        .padding(.top, 8)
+//                    }
+//                    else{
+//                        HStack{
+//                            ZStack(alignment: .bottomTrailing) {
+//                                HStack {
+//                                    Text(message.content)
+//                                        .padding(.vertical, 8)
+//                                        .foregroundColor(.primary)
+//                                }
+//                                .padding()
+//                                .background(Color(.systemGray6))
+//                                .clipShape(ChatBubble(isCurrentUser:  isCurrentUser))
+//                                
+//                            Text("16:36")
+//                                .font(.caption)
+//                                .foregroundColor(.primary)
+//                                .padding(.trailing, 8)
+//                                .padding(.bottom, 8)
+//                            
+//                            }
+//                            Spacer()
+//                        }
+//                        .padding(.horizontal)
+//                        .padding(.top, 8)
+//                        
+//  
+//                    }
+//                    
+//                }
+//                
+//                HStack{Spacer()}
+//            }
+//            
+//        }
+//
+//    }
+    private var messageListView: some View {
+          ScrollView {
+              ScrollViewReader { proxy in
+                  VStack {
+                      ForEach(viewModel.messages) { message in
+                          messageRow(for: message)
+                      }
+                  }
+                  .onChange(of: viewModel.messages, initial: true) { lastmessage, newValue in
+                      if let lastMessage = newValue.last {
+                          withAnimation {
+                              proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                              
+                          }
+                      }
+                  }
+                  .onAppear {
+                      if let lastMessage = viewModel.messages.last {
+                          withAnimation {
+                              proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                          }
+                      }
+                  }
+              }
+          }
+      }
+    
+    private func messageRow(for message: Message) -> some View {
+            let isCurrentUser = message.senderUUID == loggedInUser.uuid
+            return Group {
                 if isCurrentUser {
                     HStack{
                         Spacer()
@@ -112,27 +177,12 @@ struct MessageView: View {
                     }
                     .padding(.horizontal)
                     .padding(.top, 8)
-                    
-//                    ForEach(message.attachments, id: \.fileURL) { attachment in
-//                                // render the attachment based on its type.
-//                                if attachment.fileType == "image/jpeg" {
-//                                    // Assuming you have a way to load the image from the fileURL
-//                                    Image(/* Load Image from attachment.fileURL */)
-//                                        .resizable()
-//                                        .aspectRatio(contentMode: .fit)
-//                                        .cornerRadius(8)
-//                                } else {
-//                                    // Handle other attachment types.
-//                                    Text("Attachment: \(attachment.filename)")
-//                                }
-//                            }
                 }
-                
             }
-            
-            HStack{Spacer()}
         }
-    }
+    
+    
+    
     
     private var chatInputView: some View{
         HStack{
@@ -153,15 +203,7 @@ struct MessageView: View {
             Button(action: {
                 let messageEvent = sendMessage(senderUUID: loggedInUser.uuid, recipientUUID: recipient)
                 viewModel.send(messageEvent: messageEvent)
-//                    if case let .message(message) = messageEvent.payload {
-//                        // Append the sent message to the messages array in ViewModel
-//                        viewModel.messages.append(message)
-//                    }
-                
-//                viewModel.send(messageEvent: messageEvent)
-//                    // Append the sent message to the messages array in ViewModel
-//                viewModel.messages.append(messageEvent.payload)
-//                    // Reset the messageText to an empty string
+
                 messageText = ""
             }, label: {
                 Image(systemName: "paperplane.fill")
@@ -214,17 +256,6 @@ struct MessageView: View {
         return messageEvent
         
     }
-
-    
-    
-//    func connectToWebSocket() {
-//        if let accessToken = KeychainHelper.getToken() {
-//            viewModel.connect(token: accessToken)
-//        } else {
-//            // Handle error, e.g., show an alert or redirect the user to a login screen
-//            print("Error: Failed to retrieve access token from keychain.")
-//        }
-//    }
     
     private func imageName(for status: MessageStatus) -> String {
         switch status {
@@ -234,6 +265,8 @@ struct MessageView: View {
             print("Checkmarl returned")
             return "checkmark"
         case .delivered:
+            return "checkmark.circle"
+        case .read:
             return "checkmark.circle.fill"
         default:
             return "clock" // Default case, you can adjust this as needed
@@ -247,4 +280,16 @@ struct MessageView: View {
 ////    .preferredColorScheme(.dark)
 //
 //}
-
+//                    ForEach(message.attachments, id: \.fileURL) { attachment in
+//                                // render the attachment based on its type.
+//                                if attachment.fileType == "image/jpeg" {
+//                                    // Assuming you have a way to load the image from the fileURL
+//                                    Image(/* Load Image from attachment.fileURL */)
+//                                        .resizable()
+//                                        .aspectRatio(contentMode: .fit)
+//                                        .cornerRadius(8)
+//                                } else {
+//                                    // Handle other attachment types.
+//                                    Text("Attachment: \(attachment.filename)")
+//                                }
+//                            }

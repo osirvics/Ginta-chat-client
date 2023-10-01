@@ -18,155 +18,208 @@ class MessageViewModel: ObservableObject{
     private let httpClient = HTTPClient()
     private var cancellables: Set<AnyCancellable> = []
     @EnvironmentObject var authViewModel: AuthViewModel
-         
-         
-       
+    
+    
     init(recipientUUID: String, senderUUID: String) {
-           self.recipientUUID = recipientUUID
-           self.senderUUID = senderUUID
-              
-           let conversationID = GlobalWebSocketManager.shared.getConversationID(
-           senderUUID: senderUUID, recipientUUID: recipientUUID)
-           
-           self.messages = GlobalWebSocketManager.shared.messagesDictionary[conversationID] ?? []
-           
-           subscribeToIncomingMessages()
-       }
-
-//       private func subscribeToIncomingMessages() {
-//           for message in GlobalWebSocketManager.shared.incomingMessages where message.payload.recipientUUID == recipientUUID {
-//               handleMessageEvent(message)
-//           }
-//       }
+        self.recipientUUID = recipientUUID
+        self.senderUUID = senderUUID
+        
+        let conversationID = GlobalWebSocketManager.shared.getConversationID(
+            senderUUID: senderUUID, recipientUUID: recipientUUID)
+        
+        self.messages = GlobalWebSocketManager.shared.messagesDictionary[conversationID] ?? []
+        
+        subscribeToIncomingMessages()
+        getAllMessages(recipientUUID: recipientUUID)
+    }
+    
     private func subscribeToIncomingMessages() {
         GlobalWebSocketManager.shared.incomingMessages
             .sink { [weak self] messageEvent in
                 switch messageEvent.payload {
                 case .message(let message):
-                    if message.recipientUUID == self?.recipientUUID || message.senderUUID == self?.recipientUUID {
-                        self?.handleMessageEvent(messageEvent)
-                    }
+                    //                /*    if message.recipientUUID == self?.recipientUUID || message.senderUUID == self?.recipientUUID*/ {
+                    self?.handleMessageEvent(messageEvent)
+                    //                    print("DEBUG: message in sub \(MessageEvent.eventType)")
+                    //                    }
                 case .directConversation(_):
-                    // Handle or ignore DirectConversation objects based on your requirement.
+                    break
+                case .directMessageDelivery(_):
+                    break
+                case .directMessageRead(_):
+                    break
+                case .directMessageReadList(let messageReadList):
+                    
+                    // Create a set of UUIDs to mark as read for O(1) lookup
+                    let uuidsToMarkAsRead = Set(messageReadList.messageUuids)
+                    // If self?.messages exists, proceed with the operation
+                    if var messages = self?.messages {
+                        for (index, message) in messages.enumerated() {
+                            if let uuid = message.uuid, uuidsToMarkAsRead.contains(uuid) {
+                                // Update the status to "Read" for that message
+                                messages[index].status = .read
+                            }
+                        }
+                        // Update the @Published var messages with the modified array
+                        self?.messages = messages
+                    }
+                    
                     break
                 }
             }
             .store(in: &cancellables)
     }
-//    private func subscribeToIncomingMessages() {
-//        
-//           GlobalWebSocketManager.shared.incomingMessages
-//               .sink { [weak self] messageEvent in
-//                   /*if messageEvent.payload.recipientUUID == self?.recipientUUID || messageEvent.payload.senderUUID == self?.recipientUUID*/  /*{*/
-//                       self?.handleMessageEvent(messageEvent)
-////                   }
-//               }
-//               .store(in: &cancellables)
-//       }
-//    
     
-//    func send(messageEvent: MessageEvent) {
-//          // Construct the MessageEvent object
-////          let messageEvent = //... Your logic to create MessageEvent
-//          GlobalWebSocketManager.shared.send(event: messageEvent)
-//          // Optimistically append the message
-////          messages.append(messageEvent.payload)
-//      }
     
     func send(messageEvent: MessageEvent) {
         GlobalWebSocketManager.shared.send(event: messageEvent)
-        // Optimistically append the message
         switch messageEvent.payload {
         case .message(let message):
             messages.append(message)
         case .directConversation(_):
             // Handle if you ever need to send a DirectConversation object
             break
+        case .directMessageDelivery(_):
+            break
+        case .directMessageRead(_):
+            break
+        case .directMessageReadList(_):
+            break
         }
     }
     
     private func handleMessageEvent(_ messageEvent: MessageEvent) {
-        print("DEBUG: Message event received in Viewmodel")
-          
-          switch messageEvent.eventType {
-          case .directMessage, .directMessageReceived:
-              switch messageEvent.payload {
-              case .message(let message):
-                  if messageEvent.eventType == .directMessage {
-                      // Handle direct message
-                      print("DEBUG: Received a direct message!")
-                      messages.append(message)
-                  } else if messageEvent.eventType == .directMessageReceived {
-                      // Handle direct message received acknowledgment
-                      print("DEBUG: Received an acknowledgment for direct message!")
-                      if let index = messages.firstIndex(where: { $0.clientUUID == message.clientUUID }) {
-                          // Replace the existing message with the one received from the server
-                          messages[index] = message
-                          print("DEBUG: Index found and replaced: \(index)")
-                      }
-                  }
-              case .directConversation(_):
-                  // This shouldn't occur for these event types, but you can decide how you want to handle it.
-                  break
-              }
-          // Add cases for other event types as needed
-          case .conversationUpdated:
-              // Handle the case when the payload is a DirectConversation.
-              if case let .directConversation(directConversation) = messageEvent.payload {
-                  print("Received a conversation update!")
-                  // Perform the necessary operations with the received DirectConversation object.
-              }
-          default:
-              break
-          }
-//        print("Message event received in Viewmodel")
-//        
-//        switch messageEvent.eventType {
-//        case .directMessage:
-//            // Handle direct message
-//            print("Received a direct message!")
-//            messages.append(messageEvent.payload)
-//        case .directMessageReceived:
-//            
-//            if let index = messages.firstIndex(where: { $0.clientUUID == messageEvent.payload.clientUUID }) {
-//                // Replace the existing message with the one received from the server
-//                messages[index] = messageEvent.payload
-//                print("Index found and replaced: \(index)")
-//            }
-//            // Handle direct message received acknowledgment
-//            print("Received an acknowledgment for direct message!")
-//            // Add cases for other event types as needed
-//        default:
-//            break
-//        }
-//        // After handling the message, update the latestMessageEvent property
+//        print("DEBUG: Message event received in Viewmodel")
+        
+        switch messageEvent.eventType {
+        case .directMessage, .directMessageReceived, .directMessageDelivered, .directMessageRead, .directMessageReadList:
+            switch messageEvent.payload {
+            case .message(let message):
+                if messageEvent.eventType == .directMessage {
+                    insertMessageSorted(message)
+                    sendDeliveryAcknowledgment(messageUUID: message.uuid ?? "",
+                                               senderUUID: message.senderUUID,
+                                               status: .read
+                    )
+                
+                } else if messageEvent.eventType == .directMessageReceived {
+                    if let index = messages.firstIndex(where: { $0.clientUUID == message.clientUUID }) {
+                        messages[index] = message
+                        sortMessages()
+                    }
+                    
+                } else if messageEvent.eventType == .directMessageDelivered {
+                    if let index = messages.firstIndex(where: { $0.clientUUID == message.clientUUID }) {
+                        messages[index] = message
+                        sortMessages()
+                    }
+                }
+                else if messageEvent.eventType == .directMessageRead {
+                   if let index = messages.firstIndex(where: { $0.clientUUID == message.clientUUID }) {
+                       messages[index] = message
+                       sortMessages()
+                   }
+               }
+                else if messageEvent.eventType == .directMessageReadList  {
+               }
+            case .directConversation(_):
+                break
+            case .directMessageDelivery(_):
+                break
+                
+            case .directMessageRead(_):
+                break
+            case .directMessageReadList(let messageReadList):
+                if messageEvent.eventType == .directMessageReadList {
+                    print("WARNING: Received a message read list! \(messageReadList)")
+                }
+               
+                
+                break
+            }
+            // Add cases for other event types as needed
+        case .conversationUpdated:
+            // Handle the case when the payload is a DirectConversation.
+            if case let .directConversation(directConversation) = messageEvent.payload {
+                print("Received a conversation update!")
+            }
+        default:
+            break
+        }
+        
     }
     
-    func getAllMessages(recipientUUID: String){
+    private func sendDeliveryAcknowledgment(messageUUID: String, senderUUID: String, status: MessageStatus){
+        
+        let deliveryPayload = Payload.directMessageDelivery(DirectMessageDelivery(
+            uuid: messageUUID,
+            senderUUID: senderUUID,
+            status: status
+        ))
+        
+        let messageEvent = MessageEvent(
+            eventType: .directMessageRead,
+            payload: deliveryPayload
+        )
+        GlobalWebSocketManager.shared.send(event: messageEvent)
+    }
+    
+    private func insertMessageSorted(_ message: Message) {
+        if let timestamp = message.timestamp {
+            // Searching for the position where the new message should be inserted
+            if let index = messages.firstIndex(where: { $0.timestamp ?? Int64.max > timestamp }) {
+                messages.insert(message, at: index)
+            } else {
+                // If no such message is found, append the new message at the end.
+                messages.append(message)
+            }
+        } else {
+            messages.append(message)
+        }
+    }
+    private func sortMessages() {
+        messages.sort(by: { $0.timestamp ?? Int64.min < $1.timestamp ?? Int64.min })
+    }
+    
+    func getAllMessages(recipientUUID: String) {
         httpClient.getAllMessages(participantUUID: recipientUUID) { (result) in
-            switch result{
+            switch result {
             case .success(let response):
-                self.messages.append(contentsOf: response.directMessages)
+                // Iterate over each message in the response
+                for incomingMessage in response.directMessages {
+                    // Try to find an index of an existing message with the same clientUUID
+                    if let index = self.messages.firstIndex(where: { $0.clientUUID == incomingMessage.clientUUID }) {
+                        // Replace the existing message with the updated one
+                        self.messages[index] = incomingMessage
+                    } else {
+                        // If the message doesn't exist, add it to the array
+                        self.messages.append(incomingMessage)
+                    }
+                }
+                // Sort the messages
+                self.messages.sort(by: { $0.timestamp ?? Int64.min < $1.timestamp ?? Int64.min })
             case .failure(let error):
                 print(error)
             }
         }
     }
+
+
     
 }
 
-//    func connect(token: String) {
-//        webSocketClient.connect(token: token)
+//    func getAllMessages(recipientUUID: String) {
+//        httpClient.getAllMessages(participantUUID: recipientUUID) { (result) in
+//            switch result {
+//            case .success(let response):
+//                let uniqueMessages = response.directMessages.filter { incomingMessage in
+//                    !self.messages.contains { $0.clientUUID == incomingMessage.clientUUID }
+//                }
+//                // Sort and merge the unique messages with the existing messages
+//                self.messages = (self.messages + uniqueMessages)
+//                    .sorted(by: { $0.timestamp ?? Int64.min < $1.timestamp ?? Int64.min })
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
 //    }
-//
-//    func send(messageEvent: MessageEvent) {
-//        webSocketClient.send(event: messageEvent)
-//    }
-    
-//    func sendMessage(content: String) {
-//          // Construct the MessageEvent object
-//          let messageEvent = //... Your logic to create MessageEvent
-//          GlobalWebSocketManager.shared.send(event: messageEvent)
-//          // Optimistically append the message
-//          messages.append(messageEvent.payload)
-//      }

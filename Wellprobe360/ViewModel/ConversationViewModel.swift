@@ -26,20 +26,23 @@ class ConversationViewModel: ObservableObject {
         httpClient.getAllConversations { result in
             switch result {
             case .success(let conversationResponse):
-                print("Total Conversations: \(conversationResponse.directConversations.count)")
-                self.directConversations = conversationResponse.directConversations
+//                print("Total Conversations: \(conversationResponse.directConversations.count)")
+                self.directConversations = conversationResponse.directConversations.sorted {
+                    $0.lastMessageAt > $1.lastMessageAt
+                }
             case .failure(let error):
                 print("Error fetching all conversations: \(error)")
             }
         }
     }
-    
+
     func updateConversations() {
         httpClient.getAllConversations { result in
             switch result {
             case .success(let conversationResponse):
-                self.directConversations.removeAll()
-                self.directConversations = conversationResponse.directConversations
+                self.directConversations = conversationResponse.directConversations.sorted {
+                    $0.lastMessageAt > $1.lastMessageAt
+                }
             case .failure(let error):
                 print("Error fetching all conversations: \(error)")
             }
@@ -55,23 +58,31 @@ class ConversationViewModel: ObservableObject {
                 case .message(_):
                     // Handle or ignore Message objects based on your requirement.
                     print("Received a message payload")
+                case .directMessageDelivery(_):
+                    break
+                case .directMessageRead(_):
+                    break
+                case .directMessageReadList(_):
+                    break
                 }
             }
             .store(in: &cancellables)
     }
     
     private func handleUpdatedConversation(_ messageEvent: MessageEvent) {
-        print("DEBUG: Received messageEvent in ConversationViewModel: \(messageEvent)")
+//        print("DEBUG: Received messageEvent in ConversationViewModel: \(messageEvent)")
         switch messageEvent.eventType {
         case .conversationUpdated:
             if case .directConversation(let directConversation) = messageEvent.payload {
-                print("DEBUG: Received directConversation: \(directConversation)")
+//               hi
                 
                 // Find the conversation corresponding to the directConversation and update it
                 if let index = directConversations.firstIndex(where: { $0.id == directConversation.id }) {
                     // Update the lastMessage and lastMessageAt of the conversation
                     directConversations[index].lastMessage = directConversation.lastMessage
                     directConversations[index].lastMessageAt = directConversation.lastMessageAt
+                    
+                    directConversations.sort { $0.lastMessageAt > $1.lastMessageAt }
 //                    print("DEBUG: Updated conversation: \(directConversations[index])")
                 } else {
                     // If the conversation does not exist in the list, add it.

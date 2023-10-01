@@ -31,13 +31,26 @@ class HTTPClient {
         }
     }
     
-    func getAllUsers(completion: @escaping (Result<UserResponse, Error>) -> Void) {
-        AF.request(userUrl, headers: headers).responseDecodable(of: UserResponse.self) { response in
-            switch response.result {
-            case .success(let userResponse):
-                completion(.success(userResponse))
-            case .failure(let error):
-                completion(.failure(error))
+//    func getAllUsers(completion: @escaping (Result<UserResponse, Error>) -> Void) {
+//        AF.request(userUrl, headers: headers).responseDecodable(of: UserResponse.self) { response in
+//            switch response.result {
+//            case .success(let userResponse):
+//                completion(.success(userResponse))
+//            case .failure(let error):
+//                completion(.failure(error))
+//            }
+//        }
+//    }
+    
+    func getAllUsers() async throws -> UserResponse {
+        return try await withCheckedThrowingContinuation { continuation in
+            AF.request(userUrl, headers: headers).responseDecodable(of: UserResponse.self) { response in
+                switch response.result {
+                case .success(let userResponse):
+                    continuation.resume(returning: userResponse)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
             }
         }
     }

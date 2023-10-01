@@ -22,9 +22,11 @@ struct UserListView: View {
                                 label: {
                                     UserItem(user: user)
                                 }).buttonStyle(PlainButtonStyle())
-                        
+                            
                         }
                     }.padding()
+                } .refreshable {
+                    await viewModel.getUsers()
                 }
                 
                 

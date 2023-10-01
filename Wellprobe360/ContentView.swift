@@ -44,18 +44,24 @@ struct ContentView: View {
                             Image(systemName: "bell")
                             Text("Notifications")
                         }
-                }.onAppear(perform: connectToWebSocket)
+                }/*.onAppear(perform: connectToWebSocket)*/
                 
             }
         }
  
     }
     
+//    private func connectToWebSocket() {
+//        if let token = KeychainHelper.getToken() {
+//            GlobalWebSocketManager.shared.connect(token: token)
+//        }
+//    }
+    
     private func connectToWebSocket() {
-        if let token = KeychainHelper.getToken() {
-            GlobalWebSocketManager.shared.connect(token: token)
+            if !GlobalWebSocketManager.shared.webSocketClient.isConnected, let token = KeychainHelper.getToken() {
+                GlobalWebSocketManager.shared.connect(token: token)
+            }
         }
-    }
     
 }
 

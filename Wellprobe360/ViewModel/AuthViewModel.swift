@@ -26,7 +26,7 @@ class AuthViewModel: ObservableObject {
     private init() {
         self.errorMessage = nil
         getProfile()
-        getUsers()
+        Task {await getUsers()}
       
     }
     
@@ -56,7 +56,7 @@ class AuthViewModel: ObservableObject {
                     
                     // Save the access_token to the Keychain using KeychainHelper
                    KeychainHelper.storeToken(authResponse.accessToken)
-                    self.getUsers()
+                    Task {await self.getUsers()}
 //                    self.getProfile()
                    
                     if let storedToken = KeychainHelper.getToken() {
@@ -107,17 +107,13 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func getUsers(){
-        httpClient.getAllUsers { result in
-            switch result {
-            case .success(let userResponse):
-                print("Total Users: \(userResponse.users.count)")
-            
-            case .failure(let error):
-                print("Error fetching all users: \(error.localizedDescription)")
-            }
-        }
-    }
-    
+    func getUsers() async {
+           do {
+               let userResponse = try await httpClient.getAllUsers()
+               print("Total Users: \(userResponse.users.count)")
+           } catch {
+               print("Error fetching all users: \(error.localizedDescription)")
+           }
+       }
 
 }

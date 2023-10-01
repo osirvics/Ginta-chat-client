@@ -46,14 +46,14 @@ struct MessageResponse: Codable {
 }
 
 // MARK: - Payload
-struct Message: Codable, Identifiable {
+struct Message: Codable, Identifiable, Equatable {
     let uuid: String?
     let directConversationUUID: String?
     let senderUUID: String
     let recipientUUID: String
     let content: String
     let clientUUID: String
-    let status: MessageStatus
+    var status: MessageStatus
     let messageTag: MessageTag
     let requestUUID: String?
     let attachments: [Attachment]
@@ -64,6 +64,11 @@ struct Message: Codable, Identifiable {
     var id: String {
         return clientUUID // Use uuid or a new UUID if it's nil
     }
+    
+    static func == (lhs: Message, rhs: Message) -> Bool {
+          return lhs.clientUUID == rhs.clientUUID
+      }
+  
 
     enum CodingKeys: String, CodingKey {
         case uuid
@@ -115,6 +120,28 @@ struct Attachment: Codable {
 
 // Enums...
 
+struct DirectMessageDelivery: Codable{
+    let uuid: String
+    let senderUUID: String
+    let status: MessageStatus
+    
+    enum CodingKeys: String, CodingKey {
+        case uuid
+        case senderUUID = "sender_uuid"
+        case status
+    }
+}
+
+
+struct DirectMessageReadList: Codable {
+        let senderUUID: String
+        let messageUuids: [String]
+
+        enum CodingKeys: String, CodingKey {
+            case senderUUID = "sender_uuid"
+            case messageUuids = "message_uuids"
+        }
+    }
 
 enum MessageType: String, Codable {
     case direct = "Direct"
@@ -140,26 +167,40 @@ enum MessageEventType: String, Codable {
     case directMessageReceived = "direct_message_received"
     case directMessageDelivered = "direct_message_delivered"
     case directMessageRead = "direct_message_read"
+    case directMessageReadList = "direct_message_read_list"
     case groupMessage = "group_message"
     case groupMessageReceived = "group_message_received"
     case conversationUpdated = "conversation_updated"
 
-   
 }
+
+
 
 
 enum Payload: Codable {
     case message(Message)
     case directConversation(DirectConversation)
+    case directMessageDelivery(DirectMessageDelivery)
+    case directMessageRead(DirectMessageDelivery)
+    case directMessageReadList(DirectMessageReadList)
+    
+    
+    
     
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
+        
         if let message = try? container.decode(Message.self) {
             self = .message(message)
             return
         }
         if let directConversation = try? container.decode(DirectConversation.self) {
             self = .directConversation(directConversation)
+            return
+        }
+        
+        if let directMessageReadList = try? container.decode(DirectMessageReadList.self) {
+            self = .directMessageReadList(directMessageReadList)
             return
         }
         throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unable to decode payload")
@@ -172,6 +213,13 @@ enum Payload: Codable {
             try container.encode(message)
         case .directConversation(let directConversation):
             try container.encode(directConversation)
+        case .directMessageDelivery(let directMessageDelivery):
+            try container.encode(directMessageDelivery)
+        case .directMessageRead(let directMessageRead):
+            try container.encode(directMessageRead)
+       
+        case .directMessageReadList(_):
+            break
         }
     }
 }
